@@ -1,6 +1,6 @@
 N.C.R Solutions — Portfolio V5.2 Finition Luxe
 
-Cette version affine la V5.1 :
+Cette version affine la V5.1 : 
 - hero nettoyé et boutons cohérents
 - header compact pendant l’immersion
 - tunnel de verre plus fin et moins opaque
