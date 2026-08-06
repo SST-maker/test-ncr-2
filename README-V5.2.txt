@@ -9,5 +9,5 @@ Cette version affine la V5.1 :
 - cartes projets reconstruites sans chevauchement
 - responsive mobile rééquilibré
 - performances WebGL allégées
-
+ 
 Lancer : clic droit sur « Lancer le portfolio.command » puis Ouvrir.
