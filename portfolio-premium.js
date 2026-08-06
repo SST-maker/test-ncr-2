@@ -22,8 +22,8 @@ if(starCanvas){
     const ratio=Math.min(devicePixelRatio||1,1.5);sw=innerWidth;sh=innerHeight;
     starCanvas.width=Math.max(1,Math.round(sw*ratio));starCanvas.height=Math.max(1,Math.round(sh*ratio));
     starCanvas.style.width=`${sw}px`;starCanvas.style.height=`${sh}px`;sctx.setTransform(ratio,0,0,ratio,0,0);
-    const count=Math.max(48,Math.min(130,Math.round(sw/11)));
-    stars=Array.from({length:count},(_,i)=>({x:Math.random()*sw,y:Math.random()*sh,r:.35+Math.random()*1.25,a:.1+Math.random()*.35,phase:Math.random()*Math.PI*2,speed:.35+Math.random()*.95,blue:Math.random()>.55,cross:i%17===0}));
+    const count=Math.max(82,Math.min(190,Math.round(sw/7.5)));
+    stars=Array.from({length:count},(_,i)=>({x:Math.random()*sw,y:Math.random()*sh,r:.45+Math.random()*1.5,a:.16+Math.random()*.46,phase:Math.random()*Math.PI*2,speed:.35+Math.random()*.95,blue:Math.random()>.55,cross:i%8===0}));
   }
   resizeStars();addEventListener('resize',resizeStars,{passive:true});
   function drawStars(now){
@@ -31,7 +31,7 @@ if(starCanvas){
     sctx.clearRect(0,0,sw,sh);const scrollShift=(scrollY*.025)%sh;
     for(const s of stars){let y=(s.y-scrollShift+sh)%sh;const twinkle=.42+.58*(Math.sin(now*.001*s.speed+s.phase)*.5+.5);const alpha=s.a*twinkle;
       sctx.beginPath();sctx.arc(s.x,y,s.r*(.82+twinkle*.25),0,Math.PI*2);sctx.fillStyle=s.blue?`rgba(41,151,255,${alpha})`:`rgba(81,101,126,${alpha*.72})`;sctx.fill();
-      if(s.cross&&twinkle>.62){sctx.strokeStyle=`rgba(41,151,255,${alpha*.48})`;sctx.lineWidth=.6;sctx.beginPath();sctx.moveTo(s.x-5,y);sctx.lineTo(s.x+5,y);sctx.moveTo(s.x,y-5);sctx.lineTo(s.x,y+5);sctx.stroke()}
+      if(s.cross&&twinkle>.48){const reach=5+twinkle*6;sctx.save();sctx.shadowBlur=10+twinkle*10;sctx.shadowColor=s.blue?'rgba(41,151,255,.72)':'rgba(255,255,255,.9)';sctx.strokeStyle=s.blue?`rgba(41,151,255,${Math.min(.9,alpha*.95)})`:`rgba(255,255,255,${Math.min(.9,alpha)})`;sctx.lineWidth=.75;sctx.beginPath();sctx.moveTo(s.x-reach,y);sctx.lineTo(s.x+reach,y);sctx.moveTo(s.x,y-reach);sctx.lineTo(s.x,y+reach);sctx.stroke();sctx.restore()}
     }
     if(!d.hidden)requestAnimationFrame(drawStars)
   }
