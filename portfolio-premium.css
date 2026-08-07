@@ -293,3 +293,142 @@ body::before{
 @media(max-width:640px){
   .global-starfield{opacity:.68 !important}
 }
+
+
+/* ========================================================================== 
+   V7.5 — STARLIGHT + PERFORMANCE PASS
+   ========================================================================== */
+/* Une seule couche d'étoiles animées : aucun faux ciel CSS en doublon */
+body::before{display:none!important}
+.global-starfield{
+  display:block!important;
+  position:fixed;
+  z-index:3!important;
+  inset:0;
+  width:100%;height:100%;
+  opacity:.72!important;
+  pointer-events:none!important;
+  filter:none!important;
+  mix-blend-mode:normal;
+  contain:strict;
+}
+/* Le canvas passe au-dessus des fonds de section mais sous les contenus */
+main>section{position:relative}
+.hero>.shell,.hero-shell,.statement>.shell,.statement-shell,.projects>.shell,.projects-heading,
+.project-sticky,.method>.shell,.capabilities-track,.final-card,.site-footer>.shell{position:relative;z-index:5}
+.site-footer{position:relative;z-index:5}
+.site-header{z-index:1200}
+.page-progress{z-index:1400}
+.project-dialog{z-index:2000}
+
+/* Les fonds restent légers afin que les étoiles soient perceptibles */
+.project-scene--suite{background:rgba(251,251,253,.78);backdrop-filter:none!important}
+.project-scene--sentinelle{background:rgba(11,17,27,.94)}
+.project-scene--sst{background:linear-gradient(180deg,rgba(251,251,253,.82),rgba(243,247,251,.86) 55%,rgba(251,251,253,.82))}
+.project-scene--azzera{background:rgba(255,255,255,.80);backdrop-filter:none!important}
+.method{background:rgba(251,251,253,.76)}
+.capabilities,.site-footer{background:rgba(255,255,255,.88);backdrop-filter:none!important}
+.project-logo{backdrop-filter:none!important}
+.ambient-canvas{display:none!important}
+
+/* Performance : pas de filtres animés sur de grands éléments */
+.azzera-slide{will-change:transform,opacity;transition:box-shadow .4s ease,opacity .35s ease!important}
+.azzera-slide:not(.is-active){filter:none!important}
+.azzera-slide img{transition:transform .7s cubic-bezier(.2,.75,.2,1)!important;filter:none!important}
+.project-visual--azzera::before{filter:none!important;opacity:.8}
+.robot-object{filter:drop-shadow(0 26px 38px rgba(29,29,31,.11));transition:none!important}
+.robot-depth img{filter:none!important;opacity:.08}
+.robot-depth img:nth-child(2){opacity:.06}.robot-depth img:nth-child(3){opacity:.045}.robot-depth img:nth-child(4){opacity:.03}
+.reveal{transition:opacity .58s ease,transform .68s cubic-bezier(.2,.75,.2,1)}
+
+/* Final : plus de badge métallique. Le robot devient directement l'emblème 3D. */
+.final-visual{position:relative;perspective:1600px;transform-style:preserve-3d;min-height:420px;overflow:visible}
+.final-emblem{
+  position:absolute;left:50%;top:50%;width:clamp(190px,19vw,270px);aspect-ratio:1;
+  transform:translate(-50%,-50%);transform-style:preserve-3d;
+}
+.final-emblem-glow{
+  position:absolute;left:50%;top:54%;width:125%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;background:radial-gradient(circle,rgba(41,151,255,.17),rgba(41,151,255,.055) 42%,transparent 69%);
+  opacity:.9;animation:emblemGlow 5.6s ease-in-out infinite;
+}
+.final-emblem-rotor{
+  position:absolute;z-index:4;inset:12%;transform-style:preserve-3d;
+  animation:emblemSpin 8.8s linear infinite,emblemFloat 5.4s ease-in-out infinite;
+  transform-origin:50% 55%;
+}
+.final-emblem-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backface-visibility:hidden}
+.final-emblem-layer--front{z-index:6;transform:translateZ(14px);filter:drop-shadow(0 22px 30px rgba(29,29,31,.12))}
+.final-emblem-layer--back{z-index:1;transform:rotateY(180deg) translateZ(14px);filter:drop-shadow(0 22px 30px rgba(29,29,31,.10))}
+.final-emblem-layer--depth{opacity:.12;filter:brightness(.74) saturate(.8)}
+.final-emblem-layer--d1{transform:translateZ(4px)}
+.final-emblem-layer--d2{transform:translateZ(-4px);opacity:.09}
+.final-emblem-layer--d3{transform:translateZ(-12px);opacity:.055}
+.final-emblem-sheen{
+  position:absolute;z-index:8;inset:0;
+  background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.78) 47%,rgba(41,151,255,.24) 51%,transparent 65%);
+  -webkit-mask:url("logo-mark.png") center/contain no-repeat;mask:url("logo-mark.png") center/contain no-repeat;
+  animation:emblemSheen 4.8s ease-in-out infinite;pointer-events:none;
+}
+.final-emblem-orbit{position:absolute;left:50%;top:52%;border:1px solid rgba(41,151,255,.22);border-radius:50%;transform-style:preserve-3d}
+.final-emblem-orbit--outer{width:132%;aspect-ratio:1;transform:translate(-50%,-50%) rotateX(70deg);animation:emblemOrbit 15s linear infinite}
+.final-emblem-orbit--inner{width:92%;aspect-ratio:1;transform:translate(-50%,-50%) rotateX(67deg) rotateZ(38deg);border-color:rgba(29,29,31,.08);animation:emblemOrbitReverse 11s linear infinite}
+.final-spark{position:absolute;z-index:7;color:#5bb8ff;text-shadow:0 0 10px rgba(41,151,255,.65);animation:emblemSpark 3.6s ease-in-out infinite}
+.final-spark--a{left:5%;top:18%;font-size:1.05rem}.final-spark--b{right:2%;top:35%;font-size:.72rem;animation-delay:-1.2s}.final-spark--c{right:24%;bottom:3%;font-size:.9rem;animation-delay:-2.3s}
+@keyframes emblemSpin{from{transform:rotateX(7deg) rotateY(0deg)}to{transform:rotateX(7deg) rotateY(360deg)}}
+@keyframes emblemFloat{0%,100%{margin-top:0}50%{margin-top:-7px}}
+@keyframes emblemGlow{50%{opacity:.62;transform:translate(-50%,-50%) scale(.94)}}
+@keyframes emblemOrbit{to{transform:translate(-50%,-50%) rotateX(70deg) rotateZ(360deg)}}
+@keyframes emblemOrbitReverse{to{transform:translate(-50%,-50%) rotateX(67deg) rotateZ(-322deg)}}
+@keyframes emblemSpark{0%,100%{opacity:.16;transform:scale(.7) rotate(0)}48%{opacity:.9;transform:scale(1.18) rotate(42deg)}}
+@keyframes emblemSheen{0%,62%{opacity:0;transform:translateX(-125%)}72%{opacity:.85}92%,100%{opacity:0;transform:translateX(125%)}}
+
+/* Ne garde will-change que pour les éléments réellement animés */
+.final-emblem-rotor,.robot-object,.azzera-slide{will-change:transform}
+
+/* Optimisations des périphériques tactiles / moins puissants */
+.performance-lite .robot-particles i:nth-child(n+5){display:none}
+.performance-lite .visual-rings i:nth-child(3){display:none}
+.performance-lite .robot-object::after{animation-duration:8s}
+.performance-lite .final-emblem-rotor{animation-duration:11s,6.4s}
+.performance-lite .project-orb,.performance-lite .phone-aura{filter:none!important;opacity:.55}
+
+@media(max-width:900px){
+  .global-starfield{opacity:.62!important}
+  .final-visual{min-height:330px}
+  .final-emblem{width:220px}
+}
+@media(max-width:640px){
+  .global-starfield{display:block!important;opacity:.56!important}
+  .final-visual{min-height:280px}
+  .final-emblem{width:180px}
+}
+@media(prefers-reduced-motion:reduce){
+  .global-starfield{display:block!important;opacity:.48!important}
+  .final-emblem-rotor{animation-duration:18s,10s!important}
+  .final-emblem-orbit--outer{animation-duration:28s!important}
+  .final-emblem-orbit--inner{animation-duration:24s!important}
+  .final-emblem-sheen{animation:none!important}
+}
+
+
+/* V7.5.1 — pause automatique des animations hors écran */
+.robot-front{animation:none!important}
+.hero:not(.is-motion-active) .visual-rings i,
+.hero:not(.is-motion-active) .robot-object::after,
+.hero:not(.is-motion-active) .robot-depth img,
+.hero:not(.is-motion-active) .robot-particles i,
+.hero:not(.is-motion-active) .robot-screen span,
+.hero:not(.is-motion-active) .hero-marquee div,
+.hero:not(.is-motion-active) .scroll-cue b{animation-play-state:paused!important}
+.project-scene:not(.is-motion-active) .radar b{animation-play-state:paused!important}
+.final-visual:not(.is-motion-active) .final-emblem-rotor,
+.final-visual:not(.is-motion-active) .final-emblem-glow,
+.final-visual:not(.is-motion-active) .final-emblem-orbit,
+.final-visual:not(.is-motion-active) .final-spark,
+.final-visual:not(.is-motion-active) .final-emblem-sheen{animation-play-state:paused!important}
+.performance-lite .robot-object::after{display:none!important}
+.performance-lite .robot-depth img{animation:none!important}
+.performance-lite .robot-particles i{box-shadow:0 0 12px rgba(41,151,255,.55)}
+.method,.final-cta,.site-footer{content-visibility:auto;contain-intrinsic-size:900px}
+.project-visual{contain:layout style}

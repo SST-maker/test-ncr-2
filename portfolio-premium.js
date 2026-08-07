@@ -1,101 +1,298 @@
 (()=>{
 'use strict';
-console.info('NCR Portfolio V7.4 — stars + continuous spin fix');
-const d=document;const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));const lerp=(a,b,t)=>a+(b-a)*t;
-const header=d.querySelector('[data-header]');const menu=d.querySelector('.menu-toggle');const nav=d.querySelector('.main-nav');const pageBar=d.querySelector('[data-page-progress]');
-function updateHeader(){header?.classList.toggle('is-scrolled',scrollY>28);const max=Math.max(1,d.documentElement.scrollHeight-innerHeight);if(pageBar)pageBar.style.width=`${scrollY/max*100}%`}updateHeader();addEventListener('scroll',updateHeader,{passive:true});
-menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav?.classList.toggle('is-open',open)});nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu?.setAttribute('aria-expanded','false');nav?.classList.remove('is-open')}));
-const reveal=[...d.querySelectorAll('.reveal')];if('IntersectionObserver'in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -8%'});reveal.forEach(el=>io.observe(el))}else reveal.forEach(el=>el.classList.add('is-visible'));
-const hero=d.querySelector('[data-hero]');const robot=d.querySelector('[data-robot]');const floats=[...d.querySelectorAll('[data-float]')];let px=0,py=0,tx=0,ty=0;const coarse=matchMedia('(pointer:coarse)').matches;
-if(!coarse)addEventListener('pointermove',e=>{tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2},{passive:true});
-function animateHero(now=performance.now()){px=lerp(px,tx,.06);py=lerp(py,ty,.06);const t=now*.001;if(robot){const floatY=Math.sin(t*.82)*8+Math.sin(t*.31)*3;const idleYaw=Math.sin(t*.45)*2.25;const idleRoll=Math.sin(t*.37)*.85;const pulse=1+Math.sin(t*.9)*.006;robot.style.setProperty('--rx',`${(-py*4.5+Math.cos(t*.54)*1.15).toFixed(2)}deg`);robot.style.setProperty('--ry',`${(px*6+idleYaw).toFixed(2)}deg`);robot.style.setProperty('--idle-rz',`${idleRoll.toFixed(2)}deg`);robot.style.setProperty('--float-y',`${floatY.toFixed(2)}px`);robot.style.setProperty('--robot-scale',pulse.toFixed(4))}floats.forEach((el,i)=>el.style.transform=`translate3d(${(px*(i?8:-10)).toFixed(1)}px,${(py*(i?6:-8)+Math.sin(t*.65+i)*3).toFixed(1)}px,${i?40:70}px)`);requestAnimationFrame(animateHero)}animateHero();
-const scenes=[...d.querySelectorAll('[data-project-scene]')];let ticking=false;function updateScenes(){scenes.forEach(scene=>{const sticky=scene.querySelector('.project-visual');if(!sticky)return;const r=scene.getBoundingClientRect();const range=Math.max(1,r.height-innerHeight);const p=clamp(-r.top/range);sticky.style.setProperty('--scene-progress',p.toFixed(4));const desktop=sticky.querySelector('.device--desktop');const float=sticky.querySelector('.device--float,.device--phone');if(desktop)desktop.style.transform=`rotateY(${lerp(-12,2,p)}deg) rotateX(${lerp(5,0,p)}deg) translate3d(0,${lerp(30,-18,p)}px,${lerp(0,65,p)}px)`;if(float)float.style.transform=`rotateY(${lerp(18,-3,p)}deg) rotateX(${lerp(-5,0,p)}deg) translate3d(0,${lerp(36,-12,p)}px,${lerp(90,135,p)}px)`});ticking=false}addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateScenes);ticking=true}},{passive:true});updateScenes();
-const tiltTargets=[...d.querySelectorAll('[data-project-tilt]')];if(!coarse)tiltTargets.forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateX(${(-y*2.6).toFixed(2)}deg) rotateY(${(x*3.4).toFixed(2)}deg)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
-const canvas=d.querySelector('[data-ambient]');if(canvas){const ctx=canvas.getContext('2d',{alpha:true});let dots=[];function resize(){const ratio=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(canvas.clientWidth*ratio);canvas.height=Math.round(canvas.clientHeight*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);dots=Array.from({length:Math.max(24,Math.floor(canvas.clientWidth/48))},()=>({x:Math.random()*canvas.clientWidth,y:Math.random()*canvas.clientHeight,r:.6+Math.random()*1.5,v:.08+Math.random()*.18,a:.08+Math.random()*.16}))}resize();addEventListener('resize',resize,{passive:true});function draw(){ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);for(const q of dots){q.y-=q.v;if(q.y<-10){q.y=canvas.clientHeight+10;q.x=Math.random()*canvas.clientWidth}ctx.beginPath();ctx.arc(q.x,q.y,q.r,0,Math.PI*2);ctx.fillStyle=`rgba(41,151,255,${q.a})`;ctx.fill()}requestAnimationFrame(draw)}if(!matchMedia('(prefers-reduced-motion:reduce)').matches)draw()}
+console.info('NCR Portfolio V7.5 — starlight + performance pass');
 
-/* Global cosmic starfield — low-cost 2D canvas */
-const starCanvas=d.querySelector('[data-starfield]');
-if(starCanvas){
-  const sctx=starCanvas.getContext('2d',{alpha:true});
-  let stars=[];let sw=0,sh=0,lastStarFrame=0;
-  const reduced=false; // V7.4: étoiles demandées visibles et scintillantes sur toute la page
-  function resizeStars(){
-    const ratio=Math.min(devicePixelRatio||1,1.5);sw=innerWidth;sh=innerHeight;
-    starCanvas.width=Math.max(1,Math.round(sw*ratio));starCanvas.height=Math.max(1,Math.round(sh*ratio));
-    starCanvas.style.width=`${sw}px`;starCanvas.style.height=`${sh}px`;sctx.setTransform(ratio,0,0,ratio,0,0);
-    const count=Math.max(120,Math.min(260,Math.round(sw/5.8)));
-    stars=Array.from({length:count},(_,i)=>({x:Math.random()*sw,y:Math.random()*sh,r:.55+Math.random()*1.65,a:.24+Math.random()*.54,phase:Math.random()*Math.PI*2,speed:.35+Math.random()*.95,blue:Math.random()>.55,cross:i%8===0}));
-  }
-  resizeStars();addEventListener('resize',resizeStars,{passive:true});
-  function drawStars(now){
-    if(now-lastStarFrame<33){requestAnimationFrame(drawStars);return}lastStarFrame=now;
-    sctx.clearRect(0,0,sw,sh);const scrollShift=(scrollY*.025)%sh;
-    for(const s of stars){let y=(s.y-scrollShift+sh)%sh;const twinkle=.42+.58*(Math.sin(now*.001*s.speed+s.phase)*.5+.5);const alpha=s.a*twinkle;
-      sctx.save();sctx.shadowBlur=5+s.r*4;sctx.shadowColor=s.blue?'rgba(41,151,255,.55)':'rgba(95,184,255,.42)';sctx.beginPath();sctx.arc(s.x,y,s.r*(.82+twinkle*.25),0,Math.PI*2);sctx.fillStyle=s.blue?`rgba(41,151,255,${Math.min(.9,alpha)})`:`rgba(72,104,142,${Math.min(.78,alpha*.9)})`;sctx.fill();sctx.restore();
-      if(s.cross&&twinkle>.48){const reach=5+twinkle*6;sctx.save();sctx.shadowBlur=10+twinkle*10;sctx.shadowColor=s.blue?'rgba(41,151,255,.72)':'rgba(255,255,255,.9)';sctx.strokeStyle=s.blue?`rgba(41,151,255,${Math.min(.9,alpha*.95)})`:`rgba(255,255,255,${Math.min(.9,alpha)})`;sctx.lineWidth=.75;sctx.beginPath();sctx.moveTo(s.x-reach,y);sctx.lineTo(s.x+reach,y);sctx.moveTo(s.x,y-reach);sctx.lineTo(s.x,y+reach);sctx.stroke();sctx.restore()}
+const d=document;
+const w=window;
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const coarse=matchMedia('(pointer:coarse)').matches;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lowPower=coarse || (navigator.hardwareConcurrency && navigator.hardwareConcurrency<=4) || (navigator.deviceMemory && navigator.deviceMemory<=4);
+if(lowPower)d.body.classList.add('performance-lite');
+
+/* Header + page progress — one RAF per scroll burst */
+const header=d.querySelector('[data-header]');
+const menu=d.querySelector('.menu-toggle');
+const nav=d.querySelector('.main-nav');
+const pageBar=d.querySelector('[data-page-progress]');
+let headerRAF=0;
+function paintHeader(){
+  headerRAF=0;
+  header?.classList.toggle('is-scrolled',scrollY>28);
+  const max=Math.max(1,d.documentElement.scrollHeight-innerHeight);
+  if(pageBar)pageBar.style.width=`${(scrollY/max*100).toFixed(3)}%`;
+}
+function queueHeader(){if(!headerRAF)headerRAF=requestAnimationFrame(paintHeader)}
+paintHeader();
+addEventListener('scroll',queueHeader,{passive:true});
+menu?.addEventListener('click',()=>{
+  const open=menu.getAttribute('aria-expanded')!=='true';
+  menu.setAttribute('aria-expanded',String(open));
+  nav?.classList.toggle('is-open',open);
+});
+nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  menu?.setAttribute('aria-expanded','false');nav?.classList.remove('is-open');
+}));
+
+/* Progressive reveals */
+const reveal=[...d.querySelectorAll('.reveal')];
+if('IntersectionObserver'in w){
+  const io=new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}
+  }),{threshold:.1,rootMargin:'0px 0px -6%'});
+  reveal.forEach(el=>io.observe(el));
+}else reveal.forEach(el=>el.classList.add('is-visible'));
+
+/* Hero — animation only while the hero is visible */
+const hero=d.querySelector('[data-hero]');
+const robot=d.querySelector('[data-robot]');
+const floats=[...d.querySelectorAll('[data-float]')];
+let px=0,py=0,tx=0,ty=0,heroRAF=0,heroActive=false,lastHeroFrame=0;
+if(!coarse){
+  addEventListener('pointermove',e=>{
+    if(!heroActive)return;
+    tx=(e.clientX/innerWidth-.5)*2;
+    ty=(e.clientY/innerHeight-.5)*2;
+  },{passive:true});
+}
+function heroFrame(now){
+  heroRAF=0;
+  if(!heroActive||d.hidden)return;
+  const minDelta=lowPower?33:16;
+  if(now-lastHeroFrame>=minDelta){
+    lastHeroFrame=now;
+    px=lerp(px,tx,lowPower?.085:.065);
+    py=lerp(py,ty,lowPower?.085:.065);
+    const t=now*.001;
+    if(robot){
+      const floatY=Math.sin(t*.76)*6+Math.sin(t*.29)*2;
+      const idleYaw=Math.sin(t*.41)*1.55;
+      const idleRoll=Math.sin(t*.34)*.55;
+      const pulse=1+Math.sin(t*.82)*.0035;
+      robot.style.setProperty('--rx',`${(-py*3.2+Math.cos(t*.5)*.7).toFixed(2)}deg`);
+      robot.style.setProperty('--ry',`${(px*4.4+idleYaw).toFixed(2)}deg`);
+      robot.style.setProperty('--idle-rz',`${idleRoll.toFixed(2)}deg`);
+      robot.style.setProperty('--float-y',`${floatY.toFixed(2)}px`);
+      robot.style.setProperty('--robot-scale',pulse.toFixed(4));
     }
-    if(!d.hidden)requestAnimationFrame(drawStars)
-  }
-  if(reduced){drawStars(0)}else requestAnimationFrame(drawStars);
-  d.addEventListener('visibilitychange',()=>{if(!d.hidden&&!reduced)requestAnimationFrame(drawStars)})
-}
-
-/* Horizontal Azzera gallery */
-const azzera=d.querySelector('[data-azzera-carousel]');
-if(azzera){
-  const slides=[...azzera.querySelectorAll('[data-azzera-slide]')];
-  const dots=[...d.querySelectorAll('.azzera-dots i')];
-  const prev=d.querySelector('[data-azzera-prev]');const next=d.querySelector('[data-azzera-next]');let azIndex=0;let azTick=false;
-  function setAzIndex(index,behavior='smooth'){azIndex=clamp(index,0,slides.length-1);azzera.scrollTo({left:azzera.clientWidth*azIndex,behavior});updateAzUI()}
-  function updateAzUI(){slides.forEach((s,i)=>s.classList.toggle('is-active',i===azIndex));dots.forEach((q,i)=>q.classList.toggle('is-active',i===azIndex));if(prev)prev.disabled=azIndex===0;if(next)next.disabled=azIndex===slides.length-1}
-  function readAzIndex(){azIndex=clamp(Math.round(azzera.scrollLeft/Math.max(1,azzera.clientWidth)),0,slides.length-1);updateAzUI();azTick=false}
-  azzera.addEventListener('scroll',()=>{if(!azTick){requestAnimationFrame(readAzIndex);azTick=true}},{passive:true});
-  azzera.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;const atStart=azzera.scrollLeft<=2&&e.deltaY<0;const atEnd=azzera.scrollLeft>=azzera.scrollWidth-azzera.clientWidth-2&&e.deltaY>0;if(atStart||atEnd)return;e.preventDefault();azzera.scrollBy({left:e.deltaY*1.15,behavior:'smooth'})},{passive:false});
-  azzera.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();setAzIndex(azIndex+1)}if(e.key==='ArrowLeft'){e.preventDefault();setAzIndex(azIndex-1)}});
-  prev?.addEventListener('click',()=>setAzIndex(azIndex-1));next?.addEventListener('click',()=>setAzIndex(azIndex+1));
-  addEventListener('resize',()=>setAzIndex(azIndex,'auto'),{passive:true});updateAzUI()
-}
-
-/* Final disc reacts subtly to pointer and scroll while its core spins */
-const finalDisc=d.querySelector('[data-final-disc]');const finalVisual=d.querySelector('[data-final-visual]');
-function updateFinalDisc(){if(!finalDisc||!finalVisual)return;const r=finalVisual.getBoundingClientRect();const visible=clamp((innerHeight-r.top)/(innerHeight+r.height));const localX=coarse?0:px;const localY=coarse?0:py;finalDisc.style.setProperty('--final-rx',`${(12-localY*4+visible*3).toFixed(2)}deg`);finalDisc.style.setProperty('--final-ry',`${(-18+localX*7).toFixed(2)}deg`);finalDisc.style.setProperty('--final-scale',(0.94+visible*.08).toFixed(4))}
-addEventListener('scroll',updateFinalDisc,{passive:true});addEventListener('pointermove',updateFinalDisc,{passive:true});updateFinalDisc();
-
-const data={suite:{title:'NCR Suite',lead:'Une plateforme modulaire conçue pour centraliser la gestion, les documents et les parcours métier.',challenge:'Réunir plusieurs besoins métiers dans une expérience unique sans rendre l’outil complexe.',approach:'Créer une architecture modulaire, des parcours cohérents et un système visuel commun.',value:'Un produit évolutif qui réduit la dispersion et facilite le pilotage quotidien.',tags:['SaaS','PWA','Dashboard','Automatisations','Responsive'],images:['assets/portfolio/ncr-suite-dashboard-real.png','assets/portfolio/ncr-suite-login-real.png']},sentinelle:{title:'Sentinelle Pro',lead:'Une PWA opérationnelle pensée pour connecter le QG et les agents de terrain.',challenge:'Faire remonter rapidement les informations utiles dans un contexte où chaque seconde compte.',approach:'Prioriser la lisibilité, l’action et l’usage mobile avec une interface dédiée aux réalités du terrain.',value:'Une vision plus claire des missions, alertes et événements opérationnels.',tags:['PWA','Sécurité privée','Cartographie','Mobile','Temps réel'],images:['assets/portfolio/sentinelle-dashboard-real.png','assets/portfolio/sentinelle-menu-real.png']},sst:{title:'Application SST',lead:'Une application mobile de révision et d’entraînement dédiée aux contenus SST.',challenge:'Rendre les contenus de formation rapides à consulter et faciles à mémoriser depuis un smartphone.',approach:'Découper les notions en modules courts, fiches et quiz avec une navigation directe.',value:'Une expérience mobile simple qui accompagne la préparation et la révision.',tags:['Mobile-first','Formation','Quiz','PWA','UX pédagogique'],images:['assets/portfolio/sst-home.webp','assets/portfolio/sst-modules.webp','assets/portfolio/sst-quiz.webp']},azzera:{title:'Sites Azzera',lead:'Un écosystème de sites vitrines cohérent, avec une identité propre à chaque activité.',challenge:'Différencier trois positionnements tout en conservant une véritable unité de groupe.',approach:'Définir une structure commune puis adapter les codes visuels, le ton et la promesse de chaque entité.',value:'Des univers lisibles, crédibles et immédiatement identifiables.',tags:['Sites vitrines','Direction artistique','Responsive','SEO','Identité de marque'],images:['assets/portfolio/azzera-invest-real.png','assets/portfolio/azzera-services-real.png','assets/portfolio/azzera-academy-real.png']}};
-const dialog=d.querySelector('[data-project-dialog]');const close=d.querySelector('[data-close-dialog]');function openProject(key){const item=data[key];if(!dialog||!item)return;dialog.querySelector('[data-dialog-title]').textContent=item.title;dialog.querySelector('[data-dialog-lead]').textContent=item.lead;dialog.querySelector('[data-dialog-challenge]').textContent=item.challenge;dialog.querySelector('[data-dialog-approach]').textContent=item.approach;dialog.querySelector('[data-dialog-value]').textContent=item.value;dialog.querySelector('[data-dialog-tags]').innerHTML=item.tags.map(t=>`<span>${t}</span>`).join('');dialog.querySelector('[data-dialog-gallery]').innerHTML=item.images.map(src=>`<img src="${src}" alt="Aperçu du projet ${item.title}">`).join('');dialog.showModal();d.body.classList.add('dialog-open')}d.querySelectorAll('[data-open-project]').forEach(btn=>btn.addEventListener('click',()=>openProject(btn.dataset.openProject)));close?.addEventListener('click',()=>dialog.close());dialog?.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});dialog?.addEventListener('close',()=>d.body.classList.remove('dialog-open'));addEventListener('keydown',e=>{if(e.key==='Escape'&&dialog?.open)dialog.close()});
-})();
-
-
-/* V7.2 — profondeur 3D du carrousel Azzera, sans supprimer son animation existante */
-(()=>{
-  const carousel=document.querySelector('[data-azzera-carousel]');
-  if(!carousel)return;
-  const slides=[...carousel.querySelectorAll('[data-azzera-slide]')];
-  const visual=carousel.closest('.project-visual--azzera');
-  let raf=0;
-  const clampLocal=(v,a,b)=>Math.min(b,Math.max(a,v));
-  function renderAzzeraDepth(){
-    raf=0;
-    const center=carousel.scrollLeft+carousel.clientWidth/2;
-    const sceneProgress=parseFloat(getComputedStyle(visual).getPropertyValue('--scene-progress'))||0;
-    const sceneLift=(.5-sceneProgress)*18;
-    slides.forEach(slide=>{
-      const slideCenter=slide.offsetLeft+slide.offsetWidth/2;
-      const delta=(slideCenter-center)/Math.max(1,carousel.clientWidth);
-      const abs=Math.min(1.25,Math.abs(delta));
-      const depth=82*(1-Math.min(1,abs));
-      const rotY=clampLocal(-delta*16,-16,16);
-      const rotZ=clampLocal(-delta*1.8,-2.2,2.2);
-      const lift=abs*26+sceneLift;
-      const scale=1-Math.min(.11,abs*.095);
-      const opacity=1-Math.min(.34,abs*.28);
-      slide.style.transform=`translate3d(0,${lift.toFixed(2)}px,${depth.toFixed(2)}px) rotateX(${(1.5+abs*1.7).toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
-      slide.style.opacity=opacity.toFixed(3);
+    floats.forEach((el,i)=>{
+      const mx=px*(i?5:-7), my=py*(i?4:-5)+Math.sin(t*.58+i)*2;
+      el.style.transform=`translate3d(${mx.toFixed(1)}px,${my.toFixed(1)}px,${i?28:42}px)`;
     });
   }
-  function queue(){if(!raf)raf=requestAnimationFrame(renderAzzeraDepth)}
-  carousel.addEventListener('scroll',queue,{passive:true});
-  addEventListener('scroll',queue,{passive:true});
-  addEventListener('resize',queue,{passive:true});
-  queue();
+  heroRAF=requestAnimationFrame(heroFrame);
+}
+function setHeroActive(active){
+  heroActive=active;
+  hero?.classList.toggle('is-motion-active',active);
+  if(active&&!heroRAF)heroRAF=requestAnimationFrame(heroFrame);
+  if(!active&&heroRAF){cancelAnimationFrame(heroRAF);heroRAF=0}
+}
+if(hero&&'IntersectionObserver'in w){
+  new IntersectionObserver(([e])=>setHeroActive(e.isIntersecting),{rootMargin:'120px 0px'}).observe(hero);
+}else setHeroActive(true);
+
+/* Project scroll transforms — only scenes near the viewport are evaluated */
+const scenes=[...d.querySelectorAll('[data-project-scene]')];
+const activeScenes=new Set();
+let scenesRAF=0;
+if('IntersectionObserver'in w){
+  const sceneIO=new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting){activeScenes.add(e.target);e.target.classList.add('is-motion-active')}else{activeScenes.delete(e.target);e.target.classList.remove('is-motion-active')};
+  }),{rootMargin:'30% 0px 30% 0px',threshold:0});
+  scenes.forEach(s=>sceneIO.observe(s));
+}else scenes.forEach(s=>activeScenes.add(s));
+function paintScenes(){
+  scenesRAF=0;
+  activeScenes.forEach(scene=>{
+    const sticky=scene.querySelector('.project-visual');
+    if(!sticky)return;
+    const r=scene.getBoundingClientRect();
+    const range=Math.max(1,r.height-innerHeight);
+    const p=clamp(-r.top/range);
+    sticky.style.setProperty('--scene-progress',p.toFixed(4));
+    const desktop=sticky.querySelector('.device--desktop');
+    const float=sticky.querySelector('.device--float,.device--phone');
+    if(desktop)desktop.style.transform=`rotateY(${lerp(-9,1.2,p).toFixed(2)}deg) rotateX(${lerp(3.5,0,p).toFixed(2)}deg) translate3d(0,${lerp(22,-12,p).toFixed(1)}px,${lerp(0,46,p).toFixed(1)}px)`;
+    if(float)float.style.transform=`rotateY(${lerp(13,-2,p).toFixed(2)}deg) rotateX(${lerp(-3.5,0,p).toFixed(2)}deg) translate3d(0,${lerp(28,-8,p).toFixed(1)}px,${lerp(60,90,p).toFixed(1)}px)`;
+  });
+  queueAzzeraDepth();
+}
+function queueScenes(){if(!scenesRAF)scenesRAF=requestAnimationFrame(paintScenes)}
+addEventListener('scroll',queueScenes,{passive:true});
+addEventListener('resize',queueScenes,{passive:true});
+queueScenes();
+
+/* Pointer tilt — RAF-throttled */
+if(!coarse){
+  d.querySelectorAll('[data-project-tilt]').forEach(el=>{
+    let raf=0,lastEvent=null;
+    el.addEventListener('pointermove',e=>{
+      lastEvent=e;
+      if(raf)return;
+      raf=requestAnimationFrame(()=>{
+        raf=0;if(!lastEvent)return;
+        const r=el.getBoundingClientRect();
+        const x=(lastEvent.clientX-r.left)/Math.max(1,r.width)-.5;
+        const y=(lastEvent.clientY-r.top)/Math.max(1,r.height)-.5;
+        el.style.transform=`rotateX(${(-y*1.6).toFixed(2)}deg) rotateY(${(x*2.1).toFixed(2)}deg)`;
+      });
+    },{passive:true});
+    el.addEventListener('pointerleave',()=>{if(raf)cancelAnimationFrame(raf);raf=0;el.style.transform=''});
+  });
+}
+
+/* Starfield — pre-rendered sprites, 20–24 fps, pauses when hidden */
+const starCanvas=d.querySelector('[data-starfield]');
+if(starCanvas){
+  const ctx=starCanvas.getContext('2d',{alpha:true,desynchronized:true});
+  let stars=[],sw=1,sh=1,starRAF=0,lastStarFrame=0;
+  const fps=lowPower?18:24;
+  const frameMs=1000/fps;
+  function makeSprite(size,blue=false,cross=false){
+    const c=d.createElement('canvas');c.width=c.height=size;
+    const x=c.getContext('2d');const m=size/2;
+    const g=x.createRadialGradient(m,m,0,m,m,m);
+    if(blue){g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.12,'rgba(150,216,255,.96)');g.addColorStop(.38,'rgba(41,151,255,.55)');g.addColorStop(1,'rgba(41,151,255,0)')}
+    else{g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.16,'rgba(132,166,201,.88)');g.addColorStop(.45,'rgba(64,94,126,.32)');g.addColorStop(1,'rgba(64,94,126,0)')}
+    x.fillStyle=g;x.fillRect(0,0,size,size);
+    if(cross){
+      x.strokeStyle=blue?'rgba(83,184,255,.85)':'rgba(86,112,143,.66)';x.lineWidth=1;
+      x.beginPath();x.moveTo(m,size*.08);x.lineTo(m,size*.92);x.moveTo(size*.08,m);x.lineTo(size*.92,m);x.stroke();
+    }
+    return c;
+  }
+  const sprites={
+    blue:makeSprite(22,true,false),steel:makeSprite(18,false,false),
+    blueCross:makeSprite(34,true,true),steelCross:makeSprite(30,false,true)
+  };
+  function resizeStars(){
+    const ratio=Math.min(devicePixelRatio||1,lowPower?1:1.25);
+    sw=innerWidth;sh=innerHeight;
+    starCanvas.width=Math.max(1,Math.round(sw*ratio));starCanvas.height=Math.max(1,Math.round(sh*ratio));
+    starCanvas.style.width=`${sw}px`;starCanvas.style.height=`${sh}px`;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    const target=lowPower?Math.round(clamp(sw/12,42,70)):Math.round(clamp(sw/9,70,120));
+    stars=Array.from({length:target},(_,i)=>({
+      x:Math.random()*sw,y:Math.random()*sh,scale:.42+Math.random()*.82,
+      base:.22+Math.random()*.48,phase:Math.random()*Math.PI*2,
+      speed:.45+Math.random()*1.15,drift:(Math.random()-.5)*.012,
+      blue:Math.random()>.38,cross:i%11===0
+    }));
+  }
+  function paintStars(now){
+    starRAF=0;
+    if(d.hidden)return;
+    if(now-lastStarFrame<frameMs){starRAF=requestAnimationFrame(paintStars);return}
+    lastStarFrame=now;
+    ctx.clearRect(0,0,sw,sh);
+    const scrollShift=(scrollY*.008)%sh;
+    for(const s of stars){
+      const pulse=.28+.72*(Math.sin(now*.001*s.speed+s.phase)*.5+.5);
+      const alpha=s.base*(.38+pulse*.62);
+      const driftX=Math.sin(now*.00012+s.phase)*12*s.drift;
+      const y=(s.y-scrollShift+sh)%sh;
+      const sprite=s.cross?(s.blue?sprites.blueCross:sprites.steelCross):(s.blue?sprites.blue:sprites.steel);
+      const baseSize=(s.cross?24:13)*s.scale*(.82+pulse*.25);
+      ctx.globalAlpha=alpha;
+      ctx.drawImage(sprite,s.x+driftX-baseSize/2,y-baseSize/2,baseSize,baseSize);
+    }
+    ctx.globalAlpha=1;
+    starRAF=requestAnimationFrame(paintStars);
+  }
+  resizeStars();
+  addEventListener('resize',()=>{resizeStars();if(!starRAF)starRAF=requestAnimationFrame(paintStars)},{passive:true});
+  d.addEventListener('visibilitychange',()=>{if(!d.hidden&&!starRAF)starRAF=requestAnimationFrame(paintStars)});
+  starRAF=requestAnimationFrame(paintStars);
+}
+
+/* Azzera horizontal carousel — native scrolling + one 3D renderer */
+const azzera=d.querySelector('[data-azzera-carousel]');
+let azSlides=[],azIndex=0,azDepthRAF=0,azSnapTimer=0;
+function queueAzzeraDepth(){if(azzera&&!azDepthRAF)azDepthRAF=requestAnimationFrame(renderAzzeraDepth)}
+function renderAzzeraDepth(){
+  azDepthRAF=0;if(!azzera)return;
+  const center=azzera.scrollLeft+azzera.clientWidth/2;
+  azSlides.forEach(slide=>{
+    const delta=(slide.offsetLeft+slide.offsetWidth/2-center)/Math.max(1,azzera.clientWidth);
+    const abs=Math.min(1.15,Math.abs(delta));
+    const depth=(lowPower?42:66)*(1-Math.min(1,abs));
+    const rotY=clamp(-delta*(lowPower?9:13),-13,13);
+    const lift=abs*(lowPower?14:20);
+    const scale=1-Math.min(.075,abs*.065);
+    slide.style.transform=`translate3d(0,${lift.toFixed(1)}px,${depth.toFixed(1)}px) rotateX(${(1+abs*.8).toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
+    slide.style.opacity=(1-Math.min(.22,abs*.18)).toFixed(3);
+  });
+}
+if(azzera){
+  azSlides=[...azzera.querySelectorAll('[data-azzera-slide]')];
+  const dots=[...d.querySelectorAll('.azzera-dots i')];
+  const prev=d.querySelector('[data-azzera-prev]');
+  const next=d.querySelector('[data-azzera-next]');
+  const updateAzUI=()=>{
+    azSlides.forEach((s,i)=>s.classList.toggle('is-active',i===azIndex));
+    dots.forEach((q,i)=>q.classList.toggle('is-active',i===azIndex));
+    if(prev)prev.disabled=azIndex===0;if(next)next.disabled=azIndex===azSlides.length-1;
+  };
+  const nearestIndex=()=>clamp(Math.round((azzera.scrollLeft+azzera.clientWidth*.07)/Math.max(1,azSlides[0]?.offsetWidth||azzera.clientWidth)),0,azSlides.length-1);
+  const setIndex=(index,behavior='smooth')=>{
+    azIndex=clamp(index,0,azSlides.length-1);
+    const slide=azSlides[azIndex];
+    if(slide)azzera.scrollTo({left:Math.max(0,slide.offsetLeft-(azzera.clientWidth-slide.offsetWidth)/2),behavior});
+    updateAzUI();queueAzzeraDepth();
+  };
+  azzera.addEventListener('scroll',()=>{
+    azIndex=nearestIndex();updateAzUI();queueAzzeraDepth();
+    clearTimeout(azSnapTimer);azSnapTimer=setTimeout(()=>setIndex(azIndex,'smooth'),110);
+  },{passive:true});
+  azzera.addEventListener('wheel',e=>{
+    if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;
+    const atStart=azzera.scrollLeft<=2&&e.deltaY<0;
+    const atEnd=azzera.scrollLeft>=azzera.scrollWidth-azzera.clientWidth-2&&e.deltaY>0;
+    if(atStart||atEnd)return;
+    e.preventDefault();
+    azzera.scrollLeft+=e.deltaY*.72;
+  },{passive:false});
+  azzera.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'){e.preventDefault();setIndex(azIndex+1)}
+    if(e.key==='ArrowLeft'){e.preventDefault();setIndex(azIndex-1)}
+  });
+  prev?.addEventListener('click',()=>setIndex(azIndex-1));
+  next?.addEventListener('click',()=>setIndex(azIndex+1));
+  addEventListener('resize',()=>setIndex(azIndex,'auto'),{passive:true});
+  updateAzUI();queueAzzeraDepth();
+}
+
+/* Pause the final emblem when it is outside the viewport */
+const finalVisual=d.querySelector('[data-final-visual]');
+if(finalVisual&&'IntersectionObserver'in w){
+  new IntersectionObserver(([e])=>finalVisual.classList.toggle('is-motion-active',e.isIntersecting),{rootMargin:'160px 0px'}).observe(finalVisual);
+}else finalVisual?.classList.add('is-motion-active');
+
+/* Project dialog */
+const data={
+  suite:{title:'NCR Suite',lead:'Une plateforme modulaire conçue pour centraliser la gestion, les documents et les parcours métier.',challenge:'Réunir plusieurs besoins métiers dans une expérience unique sans rendre l’outil complexe.',approach:'Créer une architecture modulaire, des parcours cohérents et un système visuel commun.',value:'Un produit évolutif qui réduit la dispersion et facilite le pilotage quotidien.',tags:['SaaS','PWA','Dashboard','Automatisations','Responsive'],images:['assets/portfolio/ncr-suite-dashboard-real.png','assets/portfolio/ncr-suite-login-real.png']},
+  sentinelle:{title:'Sentinelle Pro',lead:'Une PWA opérationnelle pensée pour connecter le QG et les agents de terrain.',challenge:'Faire remonter rapidement les informations utiles dans un contexte où chaque seconde compte.',approach:'Prioriser la lisibilité, l’action et l’usage mobile avec une interface dédiée aux réalités du terrain.',value:'Une vision plus claire des missions, alertes et événements opérationnels.',tags:['PWA','Sécurité privée','Cartographie','Mobile','Temps réel'],images:['assets/portfolio/sentinelle-dashboard-real.png','assets/portfolio/sentinelle-menu-real.png']},
+  sst:{title:'Application SST',lead:'Une application mobile de révision et d’entraînement dédiée aux contenus SST.',challenge:'Rendre les contenus de formation rapides à consulter et faciles à mémoriser depuis un smartphone.',approach:'Découper les notions en modules courts, fiches et quiz avec une navigation directe.',value:'Une expérience mobile simple qui accompagne la préparation et la révision.',tags:['Mobile-first','Formation','Quiz','PWA','UX pédagogique'],images:['assets/portfolio/sst-home.webp','assets/portfolio/sst-modules.webp','assets/portfolio/sst-quiz.webp']},
+  azzera:{title:'Sites Azzera',lead:'Un écosystème de sites vitrines cohérent, avec une identité propre à chaque activité.',challenge:'Différencier trois positionnements tout en conservant une véritable unité de groupe.',approach:'Définir une structure commune puis adapter les codes visuels, le ton et la promesse de chaque entité.',value:'Des univers lisibles, crédibles et immédiatement identifiables.',tags:['Sites vitrines','Direction artistique','Responsive','SEO','Identité de marque'],images:['assets/portfolio/azzera-invest-real.png','assets/portfolio/azzera-services-real.png','assets/portfolio/azzera-academy-real.png']}
+};
+const dialog=d.querySelector('[data-project-dialog]');
+const close=d.querySelector('[data-close-dialog]');
+function openProject(key){
+  const item=data[key];if(!dialog||!item)return;
+  dialog.querySelector('[data-dialog-title]').textContent=item.title;
+  dialog.querySelector('[data-dialog-lead]').textContent=item.lead;
+  dialog.querySelector('[data-dialog-challenge]').textContent=item.challenge;
+  dialog.querySelector('[data-dialog-approach]').textContent=item.approach;
+  dialog.querySelector('[data-dialog-value]').textContent=item.value;
+  dialog.querySelector('[data-dialog-tags]').innerHTML=item.tags.map(t=>`<span>${t}</span>`).join('');
+  dialog.querySelector('[data-dialog-gallery]').innerHTML=item.images.map(src=>`<img src="${src}" alt="Aperçu du projet ${item.title}">`).join('');
+  dialog.showModal();d.body.classList.add('dialog-open');
+}
+d.querySelectorAll('[data-open-project]').forEach(btn=>btn.addEventListener('click',()=>openProject(btn.dataset.openProject)));
+close?.addEventListener('click',()=>dialog.close());
+dialog?.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+dialog?.addEventListener('close',()=>d.body.classList.remove('dialog-open'));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&dialog?.open)dialog.close()});
 })();
