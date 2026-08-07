@@ -5,21 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#fbfbfd">
   <meta name="color-scheme" content="light">
-  <title>Portfolio premium V9 — N.C.R Solutions</title>
-  <meta name="description" content="Portfolio interactif premium de N.C.R Solutions : design, applications métier, PWA, SaaS, expériences web et interfaces à forte identité.">
+  <title>Portfolio premium V10 — N.C.R Solutions</title>
+  <meta name="description" content="Portfolio interactif premium de N.C.R Solutions : design, applications métier, PWA, SaaS et expériences web mises en scène dans une expérience 3D fluide.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://ncr-solutions.fr/portfolio.html">
-  <link rel="icon" type="image/png" href="favicon.png?v=9">
-  <link rel="apple-touch-icon" href="favicon.png?v=9">
+  <link rel="icon" type="image/png" href="favicon.png?v=10">
+  <link rel="apple-touch-icon" href="favicon.png?v=10">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="portfolio-v9.css?v=9.0.0">
-  <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+  <link rel="stylesheet" href="portfolio-v10.css?v=10.0.0">
+  <noscript><style>.reveal{opacity:1!important;transform:none!important}.project-stack{height:auto!important}.stack-sticky{position:relative!important;height:auto!important}.stack-card{position:relative!important;opacity:1!important;transform:none!important;margin:1rem 0!important}</style></noscript>
 </head>
 <body>
   <a class="skip-link" href="#projets">Aller aux projets</a>
-  <div class="space-field" data-space-field aria-hidden="true"><div class="space-stars" data-stars></div><div class="space-meteors" data-meteors></div></div>
+
+  <div class="cosmos" aria-hidden="true">
+    <div class="star-layer" data-stars></div>
+    <div class="meteor-layer">
+      <i class="meteor meteor--1"></i><i class="meteor meteor--2"></i><i class="meteor meteor--3"></i><i class="meteor meteor--4"></i>
+    </div>
+  </div>
   <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
 
   <header class="site-header" data-header>
@@ -40,164 +46,168 @@
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-aura hero-aura--left" aria-hidden="true"></div>
-      <div class="hero-aura hero-aura--right" aria-hidden="true"></div>
+      <div class="hero-orbit-bg" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="shell hero-grid">
         <div class="hero-copy reveal is-visible">
           <p class="eyebrow"><i></i> Design · Développement · Expérience</p>
-          <h1 id="hero-title"><span>DES EXPÉRIENCES</span><span>DIGITALES</span><span class="blue">QUI MARQUENT</span></h1>
-          <p class="hero-lead">Des interfaces premium, des applications métier et des expériences web conçues pour être belles, fluides et réellement utiles.</p>
+          <h1 id="hero-title"><span>JE CONÇOIS</span><span>DES EXPÉRIENCES</span><span class="blue">QUI RESTENT</span></h1>
+          <p class="hero-lead">Des produits digitaux construits autour de vrais usages : interfaces premium, applications métier, PWA et plateformes évolutives.</p>
           <div class="hero-actions">
-            <a class="button button--dark" href="#projets">Découvrir les projets <span>↓</span></a>
+            <a class="button button--dark" href="#projets">Entrer dans les projets <span>↓</span></a>
             <a class="button button--light" href="contact.html">Parler d’un projet <span>↗</span></a>
           </div>
           <div class="hero-facts" aria-label="Expertises principales">
-            <span><strong>Web</strong><small>Expériences premium</small></span>
-            <span><strong>PWA</strong><small>Outils métier</small></span>
-            <span><strong>SaaS</strong><small>Produits évolutifs</small></span>
+            <span><strong>04</strong><small>univers présentés</small></span>
+            <span><strong>Web · PWA</strong><small>expériences concrètes</small></span>
+            <span><strong>SaaS</strong><small>produits évolutifs</small></span>
           </div>
         </div>
 
         <div class="hero-object reveal is-visible" data-hero-object>
-          <div class="object-disc" aria-hidden="true"></div>
-          <div class="object-orbit object-orbit--a" aria-hidden="true"></div>
-          <div class="object-orbit object-orbit--b" aria-hidden="true"></div>
-          <div class="object-glow" aria-hidden="true"></div>
-          <div class="robot-object" data-hero-robot>
-            <img class="robot-depth robot-depth--3" src="assets/robot-ncr-clean.png" alt="">
-            <img class="robot-depth robot-depth--2" src="assets/robot-ncr-clean.png" alt="">
-            <img class="robot-depth robot-depth--1" src="assets/robot-ncr-clean.png" alt="">
-            <img class="robot-front" src="assets/robot-ncr-clean.png" alt="Robot NCR Solutions">
-            <span class="robot-screen-pulse" aria-hidden="true"></span>
+          <div class="hero-object__halo"></div>
+          <div class="hero-orbit hero-orbit--outer"></div>
+          <div class="hero-orbit hero-orbit--inner"></div>
+          <div class="hero-robot" data-hero-robot>
+            <img src="assets/robot-ncr-clean.png" alt="Robot NCR Solutions">
+            <span class="hero-screen-glow"></span>
           </div>
-          <div class="object-caption object-caption--top"><small>Objet 01</small><strong>Identité vivante</strong></div>
-          <div class="object-caption object-caption--bottom"><small>04 univers</small><strong>Produits réels</strong></div>
+          <div class="hero-tag hero-tag--a"><small>Direction</small><strong>Design utile</strong></div>
+          <div class="hero-tag hero-tag--b"><small>Exécution</small><strong>Code maîtrisé</strong></div>
         </div>
       </div>
-      <div class="hero-ticker" aria-hidden="true"><div><span>STRATÉGIE</span><i>✦</i><span>DESIGN D’INTERACTION</span><i>✦</i><span>FRONT-END PREMIUM</span><i>✦</i><span>APPLICATIONS MÉTIER</span><i>✦</i><span>STRATÉGIE</span><i>✦</i><span>DESIGN D’INTERACTION</span><i>✦</i><span>FRONT-END PREMIUM</span><i>✦</i><span>APPLICATIONS MÉTIER</span><i>✦</i></div></div>
+      <div class="scroll-cue" aria-hidden="true"><span>Faites défiler</span><i><b></b></i></div>
     </section>
 
-    <section class="manifest" id="positionnement">
+    <section class="manifest">
       <div class="shell">
-        <div class="manifest-card reveal">
-          <p class="section-index">01 · Positionnement</p>
-          <h2>UN DESIGN QUI <span>IMPRESSIONNE</span><br>MAIS SURTOUT QUI <em>FONCTIONNE</em></h2>
-          <div class="manifest-bottom"><p>N.C.R Solutions associe direction artistique, compréhension métier et développement pour créer des expériences claires, cohérentes et mémorables.</p><strong>NCR / 2026</strong></div>
+        <div class="manifest-grid reveal">
+          <p class="section-index">01 · La vision</p>
+          <h2>LE <span>WAOUH</span> N’A DE VALEUR<br>QUE S’IL SERT <em>L’EXPÉRIENCE</em></h2>
+          <p>N.C.R Solutions combine compréhension métier, direction artistique et développement pour transformer un besoin réel en produit clair, crédible et mémorable.</p>
         </div>
       </div>
     </section>
 
-    <section class="projects" id="projets" aria-labelledby="projects-title">
-      <div class="shell projects-head reveal">
-        <div><p class="eyebrow"><i></i> Réalisations sélectionnées</p><h2 id="projects-title">DES PROJETS<br><span>QUI PRENNENT VIE</span></h2></div>
-        <p>Chaque réalisation possède sa propre logique, son propre rythme et une mise en scène pensée autour du produit.</p>
-      </div>
-
-      <article class="case case--suite" data-case>
-        <div class="shell case-grid">
-          <div class="case-copy reveal">
-            <div class="case-brand"><img src="assets/logos/ncr-suite-logo.png" alt="Logo NCR Suite"><span>01 / 04</span></div>
-            <p class="case-kicker">SaaS multi-métier</p>
-            <h3>NCR <span>Suite</span></h3>
-            <p>Une plateforme modulaire pensée pour centraliser le pilotage, les documents, les sessions et les parcours métier dans une expérience cohérente.</p>
-            <ul><li>Architecture modulaire</li><li>Parcours métiers unifiés</li><li>Dashboard et automatisations</li></ul>
-            <button class="case-link" type="button" data-open-project="suite">Explorer le projet <span>↗</span></button>
-          </div>
-          <div class="case-stage reveal" data-case-stage>
-            <div class="stage-halo stage-halo--blue"></div>
-            <div class="browser browser--main"><div class="browser-bar"><i></i><i></i><i></i><span>ncr-suite.app</span></div><img src="assets/portfolio/ncr-suite-dashboard-real.png" alt="Tableau de bord NCR Suite"></div>
-            <div class="floating-panel floating-panel--suite"><img src="assets/portfolio/ncr-suite-login-real.png" alt="Connexion NCR Suite"></div>
-            <div class="stage-label"><small>Plateforme métier</small><strong>Une seule logique pour plusieurs activités</strong></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="case case--sentinelle" data-case>
-        <div class="shell case-grid case-grid--reverse">
-          <div class="case-copy reveal">
-            <div class="case-brand"><img src="assets/logos/sentinelle-pro-logo.png" alt="Logo Sentinelle Pro"><span>02 / 04</span></div>
-            <p class="case-kicker">PWA opérationnelle</p>
-            <h3>Sentinelle <span>Pro</span></h3>
-            <p>Une interface de supervision conçue pour relier le centre opérationnel et les agents de terrain avec une lecture immédiate de l’information.</p>
-            <ul><li>Vision QG et terrain</li><li>Cartographie et alertes</li><li>Utilisation mobile prioritaire</li></ul>
-            <button class="case-link" type="button" data-open-project="sentinelle">Explorer le projet <span>↗</span></button>
-          </div>
-          <div class="case-stage case-stage--dark reveal" data-case-stage>
-            <div class="stage-halo stage-halo--dark"></div>
-            <div class="browser browser--dark"><img src="assets/portfolio/sentinelle-dashboard-real.png" alt="Dashboard QG Sentinelle Pro"></div>
-            <div class="phone phone--sentinelle"><img src="assets/portfolio/sentinelle-menu-real.png" alt="Menu mobile Sentinelle Pro"></div>
-            <div class="radar" aria-hidden="true"><i></i><i></i><i></i></div>
-            <div class="stage-label stage-label--dark"><small>Centre opérationnel</small><strong>Décider vite avec une information claire</strong></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="case case--sst" data-case>
-        <div class="shell case-grid">
-          <div class="case-copy reveal">
-            <div class="case-brand"><img src="assets/logos/sst-app-logo.png" alt="Logo application SST"><span>03 / 04</span></div>
-            <p class="case-kicker">Application mobile</p>
-            <h3>Application <span>SST</span></h3>
-            <p>Une expérience mobile conçue pour réviser, s’entraîner et retrouver rapidement les contenus essentiels de la formation SST.</p>
-            <ul><li>Révision structurée</li><li>Modules et quiz</li><li>Lecture mobile immédiate</li></ul>
-            <button class="case-link" type="button" data-open-project="sst">Explorer le projet <span>↗</span></button>
-          </div>
-          <div class="case-stage case-stage--sst reveal" data-case-stage>
-            <div class="stage-halo stage-halo--warm"></div>
-            <div class="phone-wall"><div class="phone"><img src="assets/portfolio/sst-home.webp" alt="Accueil application SST"></div><div class="phone phone--center"><img src="assets/portfolio/sst-modules.webp" alt="Modules SST"></div><div class="phone"><img src="assets/portfolio/sst-quiz.webp" alt="Quiz SST"></div></div>
-            <div class="stage-label"><small>Formation mobile</small><strong>Réviser sans friction, partout</strong></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="case case--azzera" data-case>
-        <div class="shell case-grid case-grid--azzera">
-          <div class="case-copy reveal">
-            <div class="case-brand"><img src="assets/logos/azzera-logo.png" alt="Logo Azzera"><span>04 / 04</span></div>
-            <p class="case-kicker">Écosystème web</p>
-            <h3>Sites <span>Azzera</span></h3>
-            <p>Trois univers visuels distincts réunis par une structure cohérente et une exigence commune de crédibilité, de clarté et de conversion.</p>
-            <ul><li>Identités différenciées</li><li>Cohérence de groupe</li><li>Positionnement clair</li></ul>
-            <button class="case-link" type="button" data-open-project="azzera">Explorer le projet <span>↗</span></button>
-          </div>
-          <div class="azzera-wrap reveal" data-case-stage>
-            <div class="azzera-carousel" data-azzera-carousel tabindex="0" aria-label="Sites Azzera">
-              <figure class="azzera-slide" data-azzera-slide><div class="site-frame"><img src="assets/portfolio/azzera-invest-real.png" alt="Site Azzera Invest"></div><figcaption><b>Azzera Invest</b><span>Holding & direction stratégique</span></figcaption></figure>
-              <figure class="azzera-slide" data-azzera-slide><div class="site-frame"><img src="assets/portfolio/azzera-services-real.png" alt="Site Azzera Services+"></div><figcaption><b>Azzera Services+</b><span>Services professionnels & proximité</span></figcaption></figure>
-              <figure class="azzera-slide" data-azzera-slide><div class="site-frame"><img src="assets/portfolio/azzera-academy-real.png" alt="Site Azzera Academy"></div><figcaption><b>Azzera Academy</b><span>Formation & compétences</span></figcaption></figure>
+    <section class="project-stack" id="projets" data-project-stack aria-labelledby="projects-title">
+      <div class="stack-sticky">
+        <div class="stack-atmosphere" aria-hidden="true"><i></i><i></i><b></b></div>
+        <div class="shell stack-shell">
+          <div class="stack-copy">
+            <p class="eyebrow"><i></i> Réalisations sélectionnées</p>
+            <h2 id="projects-title">CHAQUE PROJET<br><span>VIENT PRENDRE SA PLACE</span></h2>
+            <p>Faites défiler : les réalisations arrivent depuis la profondeur puis viennent se verrouiller dans la pile, comme des objets que l’on assemble.</p>
+            <div class="stack-rail" aria-label="Progression des projets">
+              <button type="button" class="stack-rail__item is-active" data-stack-jump="0"><img src="assets/logos/ncr-suite-logo.png" alt=""><span>NCR Suite</span></button>
+              <button type="button" class="stack-rail__item" data-stack-jump="1"><img src="assets/logos/sentinelle-pro-logo.png" alt=""><span>Sentinelle Pro</span></button>
+              <button type="button" class="stack-rail__item" data-stack-jump="2"><img src="assets/logos/sst-app-logo.png" alt=""><span>Application SST</span></button>
+              <button type="button" class="stack-rail__item" data-stack-jump="3"><img src="assets/logos/azzera-logo.png" alt=""><span>Sites Azzera</span></button>
             </div>
-            <div class="azzera-controls"><div class="azzera-dots" aria-hidden="true"><i class="is-active"></i><i></i><i></i></div><div><button type="button" data-azzera-prev aria-label="Site précédent">←</button><button type="button" data-azzera-next aria-label="Site suivant">→</button></div></div>
+          </div>
+
+          <div class="stack-stage" data-stack-stage>
+            <div class="magnet-core" aria-hidden="true"><span></span><i></i></div>
+
+            <article class="stack-card stack-card--suite" data-stack-card="0">
+              <div class="stack-card__edge"></div>
+              <div class="stack-card__copy">
+                <div class="project-brand"><img src="assets/logos/ncr-suite-logo.png" alt="Logo NCR Suite"><small>SaaS multi-métier</small></div>
+                <h3>NCR <span>Suite</span></h3>
+                <p>Une plateforme modulaire qui réunit pilotage, documents, sessions et parcours métier dans une même logique.</p>
+                <div class="chips"><span>Architecture modulaire</span><span>Automatisations</span><span>Dashboard</span></div>
+                <button class="case-link" type="button" data-open-project="suite">Explorer le projet <span>↗</span></button>
+              </div>
+              <div class="stack-card__media stack-card__media--suite">
+                <div class="browser-frame"><div class="browser-top"><i></i><i></i><i></i><span>ncr-suite.app</span></div><img src="assets/portfolio/ncr-suite-dashboard-real.png" alt="Tableau de bord NCR Suite"></div>
+                <div class="mini-frame"><img src="assets/portfolio/ncr-suite-login-real.png" alt="Connexion NCR Suite"></div>
+              </div>
+            </article>
+
+            <article class="stack-card stack-card--sentinelle" data-stack-card="1">
+              <div class="stack-card__edge"></div>
+              <div class="stack-card__copy stack-card__copy--light">
+                <div class="project-brand"><img src="assets/logos/sentinelle-pro-logo.png" alt="Logo Sentinelle Pro"><small>PWA opérationnelle</small></div>
+                <h3>Sentinelle <span>Pro</span></h3>
+                <p>Une interface de supervision qui relie le centre opérationnel et le terrain avec une lecture immédiate de l’information.</p>
+                <div class="chips chips--dark"><span>QG & terrain</span><span>Alertes</span><span>Mobile</span></div>
+                <button class="case-link case-link--light" type="button" data-open-project="sentinelle">Explorer le projet <span>↗</span></button>
+              </div>
+              <div class="stack-card__media stack-card__media--sentinelle">
+                <div class="sentinelle-browser"><img src="assets/portfolio/sentinelle-dashboard-real.png" alt="Dashboard QG Sentinelle Pro"></div>
+                <div class="sentinelle-phone"><img src="assets/portfolio/sentinelle-menu-real.png" alt="Menu mobile Sentinelle Pro"></div>
+                <div class="radar-lines" aria-hidden="true"><i></i><i></i><i></i></div>
+              </div>
+            </article>
+
+            <article class="stack-card stack-card--sst" data-stack-card="2">
+              <div class="stack-card__edge"></div>
+              <div class="stack-card__copy">
+                <div class="project-brand"><img src="assets/logos/sst-app-logo.png" alt="Logo application SST"><small>Application mobile</small></div>
+                <h3>Application <span>SST</span></h3>
+                <p>Une expérience mobile pensée pour réviser, s’entraîner et retrouver rapidement les contenus essentiels de la formation SST.</p>
+                <div class="chips"><span>Révision</span><span>Quiz</span><span>Mobile-first</span></div>
+                <button class="case-link" type="button" data-open-project="sst">Explorer le projet <span>↗</span></button>
+              </div>
+              <div class="stack-card__media stack-card__media--sst">
+                <div class="sst-phone sst-phone--1"><img src="assets/portfolio/sst-home.webp" alt="Accueil application SST"></div>
+                <div class="sst-phone sst-phone--2"><img src="assets/portfolio/sst-modules.webp" alt="Modules application SST"></div>
+                <div class="sst-phone sst-phone--3"><img src="assets/portfolio/sst-quiz.webp" alt="Quiz application SST"></div>
+              </div>
+            </article>
+
+            <article class="stack-card stack-card--azzera" data-stack-card="3">
+              <div class="stack-card__edge"></div>
+              <div class="stack-card__copy">
+                <div class="project-brand"><img src="assets/logos/azzera-logo.png" alt="Logo Azzera"><small>Écosystème web</small></div>
+                <h3>Sites <span>Azzera</span></h3>
+                <p>Trois univers distincts réunis dans une même cohérence de groupe, avec une mise en scène horizontale dédiée.</p>
+                <div class="chips"><span>Invest</span><span>Services+</span><span>Academy</span></div>
+                <button class="case-link" type="button" data-open-project="azzera">Explorer le projet <span>↗</span></button>
+              </div>
+              <div class="azzera-stage">
+                <div class="azzera-carousel" data-azzera-carousel tabindex="0" aria-label="Sites Azzera">
+                  <figure data-azzera-slide><img src="assets/portfolio/azzera-invest-real.png" alt="Site Azzera Invest"><figcaption><strong>Azzera Invest</strong><span>Holding & direction stratégique</span></figcaption></figure>
+                  <figure data-azzera-slide><img src="assets/portfolio/azzera-services-real.png" alt="Site Azzera Services+"><figcaption><strong>Azzera Services+</strong><span>Services professionnels & proximité</span></figcaption></figure>
+                  <figure data-azzera-slide><img src="assets/portfolio/azzera-academy-real.png" alt="Site Azzera Academy"><figcaption><strong>Azzera Academy</strong><span>Formation & développement des compétences</span></figcaption></figure>
+                </div>
+                <div class="azzera-controls"><button type="button" data-azzera-prev aria-label="Site précédent">←</button><div class="azzera-dots" aria-hidden="true"><i class="is-active"></i><i></i><i></i></div><button type="button" data-azzera-next aria-label="Site suivant">→</button></div>
+              </div>
+            </article>
           </div>
         </div>
-      </article>
+        <div class="stack-progress" aria-hidden="true"><span data-stack-label>01 / NCR Suite</span><i><b data-stack-progress></b></i></div>
+      </div>
     </section>
 
     <section class="method" aria-labelledby="method-title">
       <div class="shell">
-        <div class="method-head reveal"><p class="eyebrow"><i></i> Une méthode complète</p><h2 id="method-title">DU BESOIN RÉEL<br><span>À L’EXPÉRIENCE FINALE</span></h2><p>Le design et le développement avancent ensemble, avec une attention constante portée à l’usage, au rythme et à la performance.</p></div>
-        <div class="method-grid">
-          <article class="method-card reveal"><span>01</span><i>⌁</i><h3>Observer</h3><p>Comprendre le contexte, les contraintes et les attentes avant de dessiner la moindre interface.</p></article>
-          <article class="method-card reveal"><span>02</span><i>▦</i><h3>Structurer</h3><p>Organiser les parcours, les données et les responsabilités pour rendre l’expérience évidente.</p></article>
-          <article class="method-card reveal"><span>03</span><i>&lt;/&gt;</i><h3>Construire</h3><p>Transformer la direction artistique en composants solides, responsives et réellement exploitables.</p></article>
-          <article class="method-card reveal"><span>04</span><i>✦</i><h3>Affiner</h3><p>Tester, simplifier et régler les détails qui donnent au produit sa sensation de qualité.</p></article>
+        <div class="method-head reveal">
+          <p class="section-index">02 · Méthode</p>
+          <h2 id="method-title">UNE CONSTRUCTION<br><span>EN QUATRE MOUVEMENTS</span></h2>
+          <p>La forme vient après la compréhension. Chaque étape réduit la complexité et rapproche le produit de son usage réel.</p>
+        </div>
+        <div class="method-orbit reveal">
+          <div class="method-line" aria-hidden="true"><i></i></div>
+          <article><b>01</b><span>⌁</span><h3>Observer</h3><p>Comprendre le contexte, les contraintes et ce qui compte vraiment.</p></article>
+          <article><b>02</b><span>▦</span><h3>Structurer</h3><p>Créer une architecture claire avant d’ajouter la moindre couche visuelle.</p></article>
+          <article><b>03</b><span>&lt;/&gt;</span><h3>Construire</h3><p>Transformer le concept en composants solides, rapides et responsives.</p></article>
+          <article><b>04</b><span>✦</span><h3>Affiner</h3><p>Tester, simplifier et régler les détails qui donnent la sensation de qualité.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="finale" aria-labelledby="final-title">
-      <div class="shell">
-        <div class="finale-card reveal">
-          <div class="finale-copy"><p class="eyebrow eyebrow--light"><i></i> Construisons quelque chose d’utile</p><h2 id="final-title">VOTRE PROJET MÉRITE<br><span>PLUS QU’UNE BELLE PAGE</span></h2><p>Il mérite une expérience claire, mémorable et pensée pour produire un vrai résultat.</p><div class="hero-actions"><a class="button button--white" href="contact.html">Parler de votre projet <span>↗</span></a><a class="button button--ghost" href="solutions-digitales.html">Voir les services</a></div></div>
-          <div class="finale-object" aria-hidden="true">
-            <div class="finale-glow"></div>
-            <div class="finale-ring"></div>
-            <div class="finale-robot">
-              <img class="final-back" src="assets/robot-ncr-clean.png" alt="">
-              <img class="final-mid" src="assets/robot-ncr-clean.png" alt="">
-              <img class="final-front" src="assets/robot-ncr-clean.png" alt="">
-            </div>
-            <span>NCR / OBJECT 01</span>
-          </div>
+    <section class="cta-space">
+      <div class="cta-nebula" aria-hidden="true"></div>
+      <div class="shell cta-grid">
+        <div class="cta-copy reveal">
+          <p class="eyebrow eyebrow--light"><i></i> Construisons quelque chose d’utile</p>
+          <h2>VOTRE PROJET MÉRITE<br><span>PLUS QU’UNE BELLE PAGE</span></h2>
+          <p>Une expérience claire, mémorable et suffisamment solide pour être utilisée au quotidien.</p>
+          <div class="hero-actions"><a class="button button--white" href="contact.html">Parler de votre projet <span>↗</span></a><a class="button button--outline" href="solutions-digitales.html">Voir les services</a></div>
+        </div>
+        <div class="cta-robot-wrap reveal" aria-hidden="true">
+          <div class="cta-floor"></div>
+          <div class="cta-robot" data-cta-robot><img src="assets/robot-ncr-clean.png" alt=""></div>
+          <span class="cta-caption">NCR / DIGITAL EXPERIENCE</span>
         </div>
       </div>
     </section>
@@ -205,7 +215,7 @@
 
   <footer class="site-footer">
     <div class="shell footer-grid">
-      <div><a class="brand footer-brand" href="/"><img src="logo-mark.png" alt="" width="42" height="42"><span>N.C.R <b>SOLUTIONS</b></span></a><p>Conception d’expériences digitales, applications métier et formations professionnelles.</p></div>
+      <div><a class="brand brand--footer" href="/"><img src="logo-mark.png" alt="" width="42" height="42"><span>N.C.R <b>SOLUTIONS</b></span></a><p>Conception d’expériences digitales, applications métier et formations professionnelles.</p></div>
       <div><h3>Navigation</h3><a href="/">Accueil</a><a href="portfolio.html">Portfolio</a><a href="solutions-digitales.html">Solutions digitales</a><a href="a-propos.html">À propos</a></div>
       <div><h3>Contact</h3><a href="mailto:ncr-formations@outlook.fr">ncr-formations@outlook.fr</a><a href="tel:+33621972139">06 21 97 21 39</a><a href="contact.html">Formulaire de contact</a></div>
     </div>
@@ -213,13 +223,10 @@
   </footer>
 
   <dialog class="project-dialog" data-project-dialog>
-    <button class="dialog-close" type="button" aria-label="Fermer" data-close-dialog>×</button>
-    <div class="dialog-head"><p>Étude du projet</p><h2 data-dialog-title></h2><p data-dialog-lead></p><div class="dialog-tags" data-dialog-tags></div></div>
-    <div class="dialog-facts"><article><span>01</span><h3>Enjeu</h3><p data-dialog-challenge></p></article><article><span>02</span><h3>Approche</h3><p data-dialog-approach></p></article><article><span>03</span><h3>Valeur</h3><p data-dialog-value></p></article></div>
-    <div class="dialog-gallery" data-dialog-gallery></div>
-    <a class="button button--dark" href="contact.html">Discuter d’un projet similaire <span>↗</span></a>
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Fermer">×</button>
+    <div class="dialog-inner"><p class="eyebrow"><i></i> Étude du projet</p><h2 data-dialog-title></h2><p class="dialog-lead" data-dialog-lead></p><div class="dialog-tags" data-dialog-tags></div><div class="dialog-gallery" data-dialog-gallery></div><div class="dialog-grid"><article><small>Enjeu</small><p data-dialog-challenge></p></article><article><small>Approche</small><p data-dialog-approach></p></article><article><small>Valeur</small><p data-dialog-value></p></article></div><a class="button button--dark" href="contact.html">Discuter d’un projet similaire <span>↗</span></a></div>
   </dialog>
 
-  <script src="portfolio-v9.js?v=9.0.0" defer></script>
+  <script src="portfolio-v10.js?v=10.0.0" defer></script>
 </body>
 </html>
