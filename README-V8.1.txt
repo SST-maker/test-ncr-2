@@ -1,0 +1,1 @@
+V8.1 — Correction animations : étoiles filantes CSS globales visibles, suppression du canvas continu, rotation finale garantie, réduction des lags et animations conservées même avec prefers-reduced-motion.

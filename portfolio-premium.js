@@ -26,59 +26,12 @@ if('IntersectionObserver'in w){
   reveals.forEach(el=>{if(!el.classList.contains('is-visible'))io.observe(el)});
 }else reveals.forEach(el=>el.classList.add('is-visible'));
 
-/* Champ spatial : petites étoiles + étoiles filantes, performant */
-const canvas=d.querySelector('[data-space-canvas]');
-if(canvas){
-  const ctx=canvas.getContext('2d',{alpha:true});
-  let cw=1,ch=1,ratio=1,stars=[],meteors=[],raf=0,last=0,nextMeteor=0;
-  const pointer={x:-9999,y:-9999,active:false};
-  const targetFPS=coarse?22:30,frame=1000/targetFPS;
-  function reset(){
-    ratio=Math.min(devicePixelRatio||1,coarse?1:1.25);cw=innerWidth;ch=innerHeight;
-    canvas.width=Math.round(cw*ratio);canvas.height=Math.round(ch*ratio);canvas.style.width=`${cw}px`;canvas.style.height=`${ch}px`;ctx.setTransform(ratio,0,0,ratio,0,0);
-    const n=coarse?38:Math.round(clamp(cw/18,52,86));
-    stars=Array.from({length:n},()=>({x:Math.random()*cw,y:Math.random()*ch,r:.45+Math.random()*.8,a:.10+Math.random()*.25,p:Math.random()*6.28,s:.25+Math.random()*.65,b:Math.random()<.22}));
-    meteors=[];nextMeteor=performance.now()+1200+Math.random()*1800;
-  }
-  function spawnMeteor(){
-    const x=cw*(.58+Math.random()*.52),y=-30+Math.random()*ch*.42;
-    const len=110+Math.random()*110,speed=10+Math.random()*6;
-    meteors.push({x,y,vx:-speed,vy:speed*.52,len,life:0,max:48+Math.random()*26,w:.7+Math.random()*.7,a:.45+Math.random()*.25});
-    if(meteors.length>3)meteors.shift();
-  }
-  function drawMeteor(m){
-    const mag=Math.hypot(m.vx,m.vy)||1,ux=m.vx/mag,uy=m.vy/mag;
-    const tx=m.x-ux*m.len,ty=m.y-uy*m.len;
-    const fade=Math.sin(Math.PI*clamp(m.life/m.max));
-    const grad=ctx.createLinearGradient(tx,ty,m.x,m.y);
-    grad.addColorStop(0,'rgba(41,151,255,0)');grad.addColorStop(.62,`rgba(41,151,255,${.18*fade})`);grad.addColorStop(1,`rgba(180,225,255,${m.a*fade})`);
-    ctx.strokeStyle=grad;ctx.lineWidth=m.w;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(m.x,m.y);ctx.stroke();
-    ctx.fillStyle=`rgba(225,244,255,${.7*fade})`;ctx.beginPath();ctx.arc(m.x,m.y,1.15,0,Math.PI*2);ctx.fill();
-  }
-  function paint(now){
-    raf=0;if(d.hidden)return;
-    if(now-last<frame){raf=requestAnimationFrame(paint);return}last=now;
-    ctx.clearRect(0,0,cw,ch);
-    const scrollShift=(scrollY*.018)%ch;
-    for(const s of stars){
-      let x=s.x,y=s.y-scrollShift*s.s*.3;if(y<0)y+=ch;
-      const tw=.62+.38*Math.sin(now*.001*s.s+s.p);let alpha=s.a*tw;
-      if(pointer.active){const dx=x-pointer.x,dy=y-pointer.y,dist=Math.hypot(dx,dy);if(dist<110&&dist>1){const f=1-dist/110;x+=dx/dist*f*5;y+=dy/dist*f*5;alpha+=f*.28}}
-      ctx.globalAlpha=clamp(alpha,0,.62);ctx.fillStyle=s.b?'#2997ff':'#7691aa';ctx.beginPath();ctx.arc(x,y,s.r,0,Math.PI*2);ctx.fill();
-    }
-    ctx.globalAlpha=1;
-    if(!reduced&&now>nextMeteor){spawnMeteor();nextMeteor=now+1700+Math.random()*2600}
-    meteors=meteors.filter(m=>{m.x+=m.vx;m.y+=m.vy;m.life++;drawMeteor(m);return m.life<m.max&&m.x>-m.len&&m.y<ch+m.len});
-    raf=requestAnimationFrame(paint);
-  }
-  if(!coarse){addEventListener('pointermove',e=>{pointer.x=e.clientX;pointer.y=e.clientY;pointer.active=true},{passive:true});addEventListener('pointerleave',()=>pointer.active=false,{passive:true})}
-  reset();addEventListener('resize',reset,{passive:true});d.addEventListener('visibilitychange',()=>{if(!d.hidden&&!raf)raf=requestAnimationFrame(paint)});raf=requestAnimationFrame(paint);
-}
+/* Fond spatial V8.1 : géré en CSS pour supprimer la boucle canvas et les lags. */
 
 /* Robot hero : profondeur + mouvement souris sans boucle globale */
 const heroTilt=d.querySelector('[data-hero-tilt]');
 const heroRobot=d.querySelector('[data-hero-robot]');
-if(heroTilt&&heroRobot&&!coarse&&!reduced){
+if(heroTilt&&heroRobot&&!coarse){
   let px=0,py=0,tx=0,ty=0,loop=0;
   const tick=()=>{loop=0;px+=(tx-px)*.11;py+=(ty-py)*.11;heroRobot.style.setProperty('--ry',`${(px*9).toFixed(2)}deg`);heroRobot.style.setProperty('--rx',`${(-py*7).toFixed(2)}deg`);heroRobot.style.setProperty('--rz',`${(px*-1.1).toFixed(2)}deg`);if(Math.abs(tx-px)>.01||Math.abs(ty-py)>.01)loop=requestAnimationFrame(tick)};
   const queue=()=>{if(!loop)loop=requestAnimationFrame(tick)};
@@ -88,7 +41,7 @@ if(heroTilt&&heroRobot&&!coarse&&!reduced){
 
 /* Perspective locale des projets, seulement au survol */
 d.querySelectorAll('[data-tilt-card]').forEach(card=>{
-  if(coarse||reduced)return;
+  if(coarse)return;
   card.style.transition='transform .32s ease';
   card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateX(${(-y*3.2).toFixed(2)}deg) rotateY(${(x*4.2).toFixed(2)}deg)`},{passive:true});
   card.addEventListener('pointerleave',()=>card.style.transform='rotateX(0deg) rotateY(0deg)',{passive:true});
