@@ -432,3 +432,109 @@ main>section{position:relative}
 .performance-lite .robot-particles i{box-shadow:0 0 12px rgba(41,151,255,.55)}
 .method,.final-cta,.site-footer{content-visibility:auto;contain-intrinsic-size:900px}
 .project-visual{contain:layout style}
+
+
+/* ========================================================================== 
+   V7.6 — PETITES ÉTOILES INTERACTIVES + LOGO FINAL PROPRE + FLUIDITÉ
+   ========================================================================== */
+
+/* Le champ d'étoiles reste discret et derrière l'interface. */
+.global-starfield{
+  position:fixed!important;
+  z-index:0!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+.cosmic-veil{
+  position:fixed;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 78% 12%,rgba(41,151,255,.07),transparent 28%),
+    radial-gradient(circle at 10% 72%,rgba(125,195,255,.05),transparent 26%);
+  opacity:.58;
+}
+body{position:relative;background:#fbfbfd}
+.site-header,main,.site-footer,.project-dialog{position:relative;z-index:2}
+.site-header{position:fixed}
+
+/* Les surfaces restent suffisamment translucides pour laisser respirer le ciel. */
+.hero{background:rgba(251,251,253,.74)}
+.project-scene--suite{background:rgba(251,251,253,.79)!important}
+.project-scene--sentinelle{background:rgba(11,17,27,.95)!important}
+.project-scene--sst{background:linear-gradient(180deg,rgba(251,251,253,.80),rgba(243,247,251,.86) 55%,rgba(251,251,253,.80))!important}
+.project-scene--azzera{background:rgba(255,255,255,.81)!important}
+.method{background:rgba(251,251,253,.79)!important}
+.capabilities,.site-footer{background:rgba(255,255,255,.90)!important}
+
+/* Important : les appareils suivent le scroll directement, sans transition retardée. */
+.device--desktop,.device--float,.device--phone{transition:none!important;will-change:transform}
+.project-visual{transform:translateZ(0);backface-visibility:hidden}
+.project-scene{contain:layout paint style}
+.azzera-slide{backface-visibility:hidden;transform-style:preserve-3d}
+
+/* Logo final : plus de badge/orbites chargés, juste le robot 3D propre qui tourne. */
+.final-visual{min-height:390px!important;perspective:1500px!important}
+.final-emblem{width:clamp(185px,18vw,250px)!important;animation:finalLogoFloat 5.8s ease-in-out infinite!important;transform-style:preserve-3d}
+.final-emblem-orbit,.final-spark{display:none!important}
+.final-emblem-glow{
+  width:118%!important;
+  opacity:.62!important;
+  background:radial-gradient(circle,rgba(41,151,255,.14),rgba(41,151,255,.04) 42%,transparent 68%)!important;
+  filter:blur(8px)!important;
+  animation:finalLogoGlow 5.8s ease-in-out infinite!important;
+}
+.final-emblem-rotor{
+  inset:8%!important;
+  transform-style:preserve-3d!important;
+  transform-origin:50% 54%!important;
+  animation:finalLogoSpin 9.2s linear infinite!important;
+  animation-play-state:running!important;
+  will-change:transform!important;
+}
+.final-emblem-layer--front{transform:translateZ(12px)!important;filter:drop-shadow(0 22px 30px rgba(29,29,31,.10))!important}
+.final-emblem-layer--back{transform:rotateY(180deg) translateZ(12px)!important;filter:drop-shadow(0 18px 24px rgba(29,29,31,.08))!important}
+.final-emblem-layer--d1{transform:translateZ(4px)!important;opacity:.10!important}
+.final-emblem-layer--d2{transform:translateZ(-4px)!important;opacity:.07!important}
+.final-emblem-layer--d3{transform:translateZ(-12px)!important;opacity:.04!important}
+.final-emblem-sheen{opacity:.34!important;animation:finalLogoSheen 6.5s ease-in-out infinite!important}
+@keyframes finalLogoSpin{
+  0%{transform:rotateX(5deg) rotateY(0deg) rotateZ(-1deg)}
+  50%{transform:rotateX(5deg) rotateY(180deg) rotateZ(1deg)}
+  100%{transform:rotateX(5deg) rotateY(360deg) rotateZ(-1deg)}
+}
+@keyframes finalLogoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes finalLogoGlow{0%,100%{transform:translate(-50%,-50%) scale(.96);opacity:.48}50%{transform:translate(-50%,-50%) scale(1.03);opacity:.72}}
+@keyframes finalLogoSheen{0%,70%{opacity:0;transform:translateX(-115%)}80%{opacity:.42}100%{opacity:0;transform:translateX(115%)}}
+
+/* Ne jamais stopper la rotation finale : coût GPU minime, rendu déterministe. */
+.final-visual:not(.is-motion-active) .final-emblem-rotor,
+.final-visual:not(.is-motion-active) .final-emblem-glow,
+.final-visual:not(.is-motion-active) .final-emblem-sheen{
+  animation-play-state:running!important;
+}
+
+/* Safari / appareils modestes : garder le mouvement, réduire les effets coûteux. */
+.performance-lite .hero-orbit{filter:blur(72px)!important;opacity:.18!important}
+.performance-lite .visual-glow{filter:none!important}
+.performance-lite .project-orb,.performance-lite .phone-aura{filter:none!important}
+.performance-lite .project-glass-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.9)!important}
+.performance-lite .floating-note{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.9)!important}
+.performance-lite .final-emblem-rotor{animation-duration:11.5s!important}
+
+@media(max-width:640px){
+  .final-visual{min-height:265px!important}
+  .final-emblem{width:170px!important}
+  .global-starfield{opacity:.92!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .global-starfield{display:block!important;opacity:.8!important}
+  .final-emblem{animation-duration:9s!important}
+  .final-emblem-rotor{animation:finalLogoSpin 16s linear infinite!important;animation-play-state:running!important}
+}
