@@ -88,23 +88,38 @@ function renderStack(p){
     if(stackLabel)stackLabel.textContent=labels[current];
     rail.forEach((b,i)=>b.classList.toggle('is-active',i===current));
   }
+  const sw=stage?.clientWidth||820,sh=stage?.clientHeight||650;
+  const activeX=-sw*.055,activeY=-sh*.050,activeS=.885;
+  const dockX=sw*.300,dockY=sh*.300,dockS=.158;
   if(stage){
-    stage.style.setProperty('--magnet',(0.18+Math.sin(p*Math.PI*n)**2*.27).toFixed(3));
+    stage.style.setProperty('--magnet',(0.18+Math.sin(p*Math.PI*n)**2*.30).toFixed(3));
     stage.style.setProperty('--stage-p',p.toFixed(4));
   }
   cards.forEach((card,i)=>{
     const local=raw-i+1;
-    let x=0,y=0,z=0,rx=0,ry=0,rz=0,s=1,o=0,sheen=0;
+    let x=0,y=0,z=0,rx=0,ry=0,rz=0,s=1,o=0,sheen=0,dockP=0;
     if(local<=0){
       const proximity=clamp(local+1);
       const e=smooth(proximity);
-      x=lerp(78,64,e);y=lerp(168,142,e);z=lerp(-350,-310,e);rx=lerp(4.2,3.5,e);ry=lerp(-7.5,-6.2,e);rz=lerp(2.2,1.8,e);s=lerp(.935,.95,e);o=0;
+      x=lerp(sw*.31,sw*.24,e);y=lerp(sh*.20,sh*.14,e);z=lerp(-430,-360,e);
+      rx=lerp(5.8,4.4,e);ry=lerp(-10.5,-8,e);rz=lerp(2.7,2.1,e);s=lerp(.72,.77,e);o=0;
     }else if(local<1){
       const e=silk(local);
-      x=lerp(64,0,e);y=lerp(142,0,e);z=lerp(-310,0,e);rx=lerp(3.5,0,e);ry=lerp(-6.2,0,e);rz=lerp(1.8,0,e);s=lerp(.95,1,e);o=clamp(local*1.28);sheen=Math.sin(local*Math.PI)*.24;
+      x=lerp(sw*.24,activeX,e);y=lerp(sh*.14,activeY,e);z=lerp(-360,24,e);
+      rx=lerp(4.4,0,e);ry=lerp(-8,0,e);rz=lerp(2.1,0,e);s=lerp(.77,activeS,e);
+      o=clamp(local*1.42);sheen=Math.sin(local*Math.PI)*.29;
     }else{
-      const behind=Math.min(local-1,3);
-      x=-behind*5.5;y=-behind*10.5;z=-behind*54;rx=behind*.18;ry=behind*-.34;rz=(i%2?1:-1)*behind*.16;s=1-behind*.017;o=Math.max(.42,1-behind*.17);sheen=i===current?.08:0;
+      dockP=silk(clamp(local-1));
+      const layer=Math.max(0,current-i-1);
+      x=lerp(activeX,dockX-layer*2.2,dockP);
+      y=lerp(activeY,dockY-layer*3.2,dockP);
+      z=lerp(24,68-layer*5,dockP);
+      rx=lerp(0,-1.2-layer*.15,dockP);
+      ry=lerp(0,2.3-layer*.18,dockP);
+      rz=lerp(0,(i%2?1:-1)*(1.4+layer*.28),dockP);
+      s=lerp(activeS,dockS-layer*.003,dockP);
+      o=lerp(1,Math.max(.70,1-layer*.10),dockP);
+      sheen=(1-dockP)*(i===current?.08:0);
     }
     card.style.setProperty('--card-x',`${x.toFixed(2)}px`);
     card.style.setProperty('--card-y',`${y.toFixed(2)}px`);
@@ -115,8 +130,10 @@ function renderStack(p){
     card.style.setProperty('--card-scale',s.toFixed(4));
     card.style.setProperty('--card-opacity',o.toFixed(3));
     card.style.setProperty('--card-sheen',sheen.toFixed(3));
-    card.style.zIndex=String(20+i);
-    card.classList.toggle('is-active',i===current&&local>.72)
+    card.style.setProperty('--dock-p',dockP.toFixed(3));
+    card.style.zIndex=String(30+i);
+    card.classList.toggle('is-active',i===current&&local>.68&&dockP<.22);
+    card.classList.toggle('is-docked',dockP>.88);
   })
 }
 function animateStack(now){

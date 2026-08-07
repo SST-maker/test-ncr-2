@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#fbfbfd">
   <meta name="color-scheme" content="light">
-  <title>Portfolio premium V10.1 — N.C.R Solutions</title>
+  <title>Portfolio premium V10.2 — N.C.R Solutions</title>
   <meta name="description" content="Portfolio interactif premium de N.C.R Solutions : design, applications métier, PWA, SaaS et expériences web mises en scène dans une expérience 3D fluide.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://ncr-solutions.fr/portfolio.html">
@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="portfolio-v10.css?v=10.1.0">
+  <link rel="stylesheet" href="portfolio-v10.css?v=10.2.0">
   <noscript><style>.reveal{opacity:1!important;transform:none!important}.project-stack{height:auto!important}.stack-sticky{position:relative!important;height:auto!important}.stack-card{position:relative!important;opacity:1!important;transform:none!important;margin:1rem 0!important}</style></noscript>
 </head>
 <body>
@@ -23,7 +23,7 @@
   <div class="cosmos" aria-hidden="true">
     <div class="star-layer" data-stars></div>
     <div class="meteor-layer">
-      <i class="meteor meteor--1"></i><i class="meteor meteor--2"></i><i class="meteor meteor--3"></i><i class="meteor meteor--4"></i>
+      <i class="meteor meteor--1"></i><i class="meteor meteor--2"></i><i class="meteor meteor--3"></i><i class="meteor meteor--4"></i><i class="meteor meteor--5"></i><i class="meteor meteor--6"></i>
     </div>
   </div>
   <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
@@ -95,7 +95,7 @@
           <div class="stack-copy">
             <p class="eyebrow"><i></i> Réalisations sélectionnées</p>
             <h2 id="projects-title">CHAQUE PROJET<br><span>VIENT PRENDRE SA PLACE</span></h2>
-            <p>Faites défiler : les réalisations arrivent depuis la profondeur puis viennent se verrouiller dans la pile, comme des objets que l’on assemble.</p>
+            <p>Faites défiler : chaque réalisation apparaît en grand, puis vient se miniaturiser et se verrouiller directement sur l’écran du robot NCR avant de laisser place à la suivante.</p>
             <div class="stack-rail" aria-label="Progression des projets">
               <button type="button" class="stack-rail__item is-active" data-stack-jump="0"><img src="assets/logos/ncr-suite-logo.png" alt=""><span>NCR Suite</span></button>
               <button type="button" class="stack-rail__item" data-stack-jump="1"><img src="assets/logos/sentinelle-pro-logo.png" alt=""><span>Sentinelle Pro</span></button>
@@ -106,10 +106,18 @@
 
           <div class="stack-stage" data-stack-stage>
             <div class="stack-stage__aura" aria-hidden="true"><i></i><b></b></div>
+            <div class="stack-robot-dock" aria-hidden="true">
+              <div class="stack-robot-dock__halo"></div>
+              <img src="assets/robot-ncr-clean.png" alt="">
+              <span class="stack-robot-screen"></span>
+              <span class="stack-robot-scan"></span>
+              <small>PROJECT MEMORY</small>
+            </div>
             <div class="magnet-core" aria-hidden="true"><span></span><i></i></div>
 
             <article class="stack-card stack-card--suite" data-stack-card="0">
               <div class="stack-card__edge"></div>
+              <div class="dock-mark" aria-hidden="true"><img src="assets/logos/ncr-suite-logo.png" alt=""><span>NCR Suite</span></div>
               <div class="stack-card__copy">
                 <div class="project-brand"><img src="assets/logos/ncr-suite-logo.png" alt="Logo NCR Suite"><small>SaaS multi-métier</small></div>
                 <h3>NCR <span>Suite</span></h3>
@@ -125,6 +133,7 @@
 
             <article class="stack-card stack-card--sentinelle" data-stack-card="1">
               <div class="stack-card__edge"></div>
+              <div class="dock-mark" aria-hidden="true"><img src="assets/logos/sentinelle-pro-logo.png" alt=""><span>Sentinelle Pro</span></div>
               <div class="stack-card__copy stack-card__copy--light">
                 <div class="project-brand"><img src="assets/logos/sentinelle-pro-logo.png" alt="Logo Sentinelle Pro"><small>PWA opérationnelle</small></div>
                 <h3>Sentinelle <span>Pro</span></h3>
@@ -141,6 +150,7 @@
 
             <article class="stack-card stack-card--sst" data-stack-card="2">
               <div class="stack-card__edge"></div>
+              <div class="dock-mark" aria-hidden="true"><img src="assets/logos/sst-app-logo.png" alt=""><span>Application SST</span></div>
               <div class="stack-card__copy">
                 <div class="project-brand"><img src="assets/logos/sst-app-logo.png" alt="Logo application SST"><small>Application mobile</small></div>
                 <h3>Application <span>SST</span></h3>
@@ -157,6 +167,7 @@
 
             <article class="stack-card stack-card--azzera" data-stack-card="3">
               <div class="stack-card__edge"></div>
+              <div class="dock-mark" aria-hidden="true"><img src="assets/logos/azzera-logo.png" alt=""><span>Sites Azzera</span></div>
               <div class="stack-card__copy">
                 <div class="project-brand"><img src="assets/logos/azzera-logo.png" alt="Logo Azzera"><small>Écosystème web</small></div>
                 <h3>Sites <span>Azzera</span></h3>
@@ -228,6 +239,6 @@
     <div class="dialog-inner"><p class="eyebrow"><i></i> Étude du projet</p><h2 data-dialog-title></h2><p class="dialog-lead" data-dialog-lead></p><div class="dialog-tags" data-dialog-tags></div><div class="dialog-gallery" data-dialog-gallery></div><div class="dialog-grid"><article><small>Enjeu</small><p data-dialog-challenge></p></article><article><small>Approche</small><p data-dialog-approach></p></article><article><small>Valeur</small><p data-dialog-value></p></article></div><a class="button button--dark" href="contact.html">Discuter d’un projet similaire <span>↗</span></a></div>
   </dialog>
 
-  <script src="portfolio-v10.js?v=10.1.0" defer></script>
+  <script src="portfolio-v10.js?v=10.2.0" defer></script>
 </body>
 </html>
