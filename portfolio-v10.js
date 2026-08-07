@@ -119,7 +119,8 @@ function renderStack(p){
 
   /* L'écran étendu est vivant tant qu'au moins une réalisation est affichée. */
   const phase=raw-Math.floor(raw);
-  const screenLive=silk(clamp(raw<.05?raw*20:1));
+  /* L'écran est déjà pleinement déployé dès que la séquence projets est active. */
+  const screenLive=1;
   if(stage){
     stage.style.setProperty('--magnet',(0.14+Math.sin(p*Math.PI*n)**2*.22).toFixed(3));
     stage.style.setProperty('--stage-p',p.toFixed(4));

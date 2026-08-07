@@ -574,3 +574,93 @@ html.page-hidden .meteor,html.page-hidden .star,html.page-hidden .hero-orbit,htm
 .stack-robot-belly{opacity:calc(1 - var(--screen-live)*.82)}
 .stack-robot-dock>img{z-index:2}
 .stack-project-display{z-index:10}
+
+/* ==========================================================================
+   V10.6 — SCREEN CALIBRATION
+   Calibration sur l'écran NOIR réel du logo NCR (asset 1194 × 1878).
+   Zone mesurée : x ≈ 388..911 / y ≈ 1095..1425.
+   ========================================================================== */
+.stack-robot-dock{
+  right:-4.5%;
+  bottom:-10%;
+  width:min(86%,620px);
+}
+
+/* Écran noir intérieur réel : pas le grand cadre blanc du ventre. */
+.stack-project-display{
+  left:32.50%;
+  top:58.25%;
+  width:43.85%;
+  height:17.55%;
+  border-radius:5.5%;
+  transform-origin:50% 50%;
+  transform:translateZ(30px) scale(calc(1 + var(--screen-live)*1.78));
+  background:linear-gradient(155deg,rgba(5,12,20,.995),rgba(8,21,35,.992));
+  border:1px solid rgba(127,207,255,.20);
+  box-shadow:
+    0 26px 72px rgba(8,22,38,.18),
+    0 0 30px rgba(41,151,255,.09),
+    inset 0 0 0 1px rgba(255,255,255,.035);
+}
+.stack-project-display__status{left:12px;top:8px;font-size:.34rem;letter-spacing:.15em}
+.stack-project-display__status i{width:4px;height:4px}
+.stack-project-display__glass{opacity:.56}
+
+/* CORRECTION IMPORTANTE : la carte remplit réellement la dalle.
+   V10.5 annulait top/left après le shorthand inset. */
+.stack-project-display .stack-card{
+  top:5.5% !important;
+  right:4.5% !important;
+  bottom:5.5% !important;
+  left:4.5% !important;
+  width:auto !important;
+  height:auto !important;
+  margin:0 !important;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+/* Le contenu est densifié pour rester lisible dans le ratio réel 1.59:1. */
+.stack-project-display .stack-card{grid-template-columns:.72fr 1.28fr}
+.stack-project-display .stack-card__copy{padding:14px 16px}
+.stack-project-display .project-brand{gap:.48rem}
+.stack-project-display .project-brand img{width:30px;height:30px;border-radius:8px}
+.stack-project-display .project-brand small{font-size:.42rem;letter-spacing:.09em}
+.stack-project-display .stack-card h3{margin-top:.45rem;font-size:clamp(1rem,1.65vw,1.82rem)}
+.stack-project-display .stack-card__copy>p{margin-top:.4rem;font-size:.52rem;line-height:1.38}
+.stack-project-display .chips{margin-top:.4rem;gap:.22rem}
+.stack-project-display .chips span{padding:.24rem .34rem;font-size:.4rem}
+.stack-project-display .case-link{margin-top:.45rem;font-size:.48rem}
+
+.stack-project-display .browser-frame{left:4%;top:7%;width:91%;border-radius:10px}
+.stack-project-display .browser-top{height:18px}
+.stack-project-display .browser-top i{width:4px;height:4px}
+.stack-project-display .browser-top span{font-size:.39rem}
+.stack-project-display .mini-frame{right:4%;bottom:5%;width:35%;border-radius:9px}
+.stack-project-display .sentinelle-browser{left:3%;top:7%;width:91%;border-radius:10px}
+.stack-project-display .sentinelle-phone{right:5%;bottom:5%;width:23%;border-width:2px;border-radius:13px}
+.stack-project-display .sst-phone{width:28%;border-width:2px;border-radius:14px}
+.stack-project-display .azzera-stage{padding:3.5% 2.5% 4%}
+.stack-project-display .azzera-carousel{gap:8px;padding:1% 6% 4%}
+.stack-project-display .azzera-carousel figure{flex-basis:87%;border-radius:11px}
+.stack-project-display .azzera-carousel figcaption{padding:.34rem .45rem}
+.stack-project-display .azzera-carousel strong{font-size:.55rem}
+.stack-project-display .azzera-carousel span{font-size:.43rem}
+.stack-project-display .azzera-controls{bottom:3%}
+.stack-project-display .azzera-controls button{width:24px;height:24px;font-size:.65rem}
+
+/* Le faux ventre de la V10.3 est recalé sur le même écran physique afin que
+   la phase mémoire parte exactement du même emplacement visuel. */
+.stack-robot-belly{
+  left:32.50%;
+  top:58.25%;
+  width:43.85%;
+  height:17.55%;
+  border-radius:5.5%;
+}
+
+@media(max-width:1100px){
+  .stack-robot-dock{right:-7%;width:min(88%,560px)}
+  .stack-project-display{transform:translateZ(26px) scale(calc(1 + var(--screen-live)*1.55))}
+  .stack-project-display .stack-card__copy>p{font-size:.48rem}
+}
