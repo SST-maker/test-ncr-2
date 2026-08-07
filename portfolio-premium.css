@@ -238,3 +238,58 @@ body::before{
 .final-disc:hover .final-disc-core{animation-play-state:running!important}
 @media(max-width:640px){.global-starfield{opacity:.9}.cosmic-veil{opacity:.86}body::before{opacity:.24}}
 @media(prefers-reduced-motion:reduce){body::before{animation:none}.final-disc-core{animation:none!important}}
+
+
+/* ========================================================================== 
+   V7.4 — Correctif réel : étoiles visibles partout + rotation permanente
+   - le canvas est volontairement au-dessus des fonds de section
+   - cache busting dans portfolio.html
+   - l'animation finale reste active et visuellement perceptible
+   ========================================================================== */
+.global-starfield{
+  display:block !important;
+  z-index:1100 !important;
+  opacity:.82 !important;
+  mix-blend-mode:normal;
+  filter:drop-shadow(0 0 6px rgba(41,151,255,.28));
+}
+.cosmic-veil{z-index:0}
+.site-header{z-index:1200}
+.page-progress{z-index:1400}
+.project-dialog{z-index:2000}
+
+/* Les étoiles passent au-dessus des fonds opaques, mais restent non interactives */
+.global-starfield{pointer-events:none !important}
+
+/* Rotation permanente et évidente du logo final */
+.final-disc-core{
+  animation:finalPremiumSpinVisible 5.2s linear infinite !important;
+  transform-origin:50% 50%;
+  will-change:transform;
+}
+.final-disc-face img{
+  animation:finalRobotLogoSpin 4.4s linear infinite !important;
+  transform-origin:50% 50%;
+  will-change:transform;
+}
+@keyframes finalPremiumSpinVisible{
+  0%{transform:rotateX(11deg) rotateY(0deg) rotateZ(-4deg)}
+  25%{transform:rotateX(7deg) rotateY(90deg) rotateZ(1deg)}
+  50%{transform:rotateX(11deg) rotateY(180deg) rotateZ(4deg)}
+  75%{transform:rotateX(15deg) rotateY(270deg) rotateZ(0deg)}
+  100%{transform:rotateX(11deg) rotateY(360deg) rotateZ(-4deg)}
+}
+@keyframes finalRobotLogoSpin{
+  to{transform:rotateZ(360deg)}
+}
+
+/* Le mode réduction des mouvements garde les éléments demandés, mais ralentis */
+@media(prefers-reduced-motion:reduce){
+  .global-starfield{display:block !important;opacity:.62 !important}
+  .final-disc-core{animation-duration:14s !important}
+  .final-disc-face img{animation-duration:12s !important}
+}
+
+@media(max-width:640px){
+  .global-starfield{opacity:.68 !important}
+}

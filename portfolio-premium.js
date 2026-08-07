@@ -1,5 +1,6 @@
 (()=>{
 'use strict';
+console.info('NCR Portfolio V7.4 — stars + continuous spin fix');
 const d=document;const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));const lerp=(a,b,t)=>a+(b-a)*t;
 const header=d.querySelector('[data-header]');const menu=d.querySelector('.menu-toggle');const nav=d.querySelector('.main-nav');const pageBar=d.querySelector('[data-page-progress]');
 function updateHeader(){header?.classList.toggle('is-scrolled',scrollY>28);const max=Math.max(1,d.documentElement.scrollHeight-innerHeight);if(pageBar)pageBar.style.width=`${scrollY/max*100}%`}updateHeader();addEventListener('scroll',updateHeader,{passive:true});
@@ -17,20 +18,20 @@ const starCanvas=d.querySelector('[data-starfield]');
 if(starCanvas){
   const sctx=starCanvas.getContext('2d',{alpha:true});
   let stars=[];let sw=0,sh=0,lastStarFrame=0;
-  const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const reduced=false; // V7.4: étoiles demandées visibles et scintillantes sur toute la page
   function resizeStars(){
     const ratio=Math.min(devicePixelRatio||1,1.5);sw=innerWidth;sh=innerHeight;
     starCanvas.width=Math.max(1,Math.round(sw*ratio));starCanvas.height=Math.max(1,Math.round(sh*ratio));
     starCanvas.style.width=`${sw}px`;starCanvas.style.height=`${sh}px`;sctx.setTransform(ratio,0,0,ratio,0,0);
-    const count=Math.max(82,Math.min(190,Math.round(sw/7.5)));
-    stars=Array.from({length:count},(_,i)=>({x:Math.random()*sw,y:Math.random()*sh,r:.45+Math.random()*1.5,a:.16+Math.random()*.46,phase:Math.random()*Math.PI*2,speed:.35+Math.random()*.95,blue:Math.random()>.55,cross:i%8===0}));
+    const count=Math.max(120,Math.min(260,Math.round(sw/5.8)));
+    stars=Array.from({length:count},(_,i)=>({x:Math.random()*sw,y:Math.random()*sh,r:.55+Math.random()*1.65,a:.24+Math.random()*.54,phase:Math.random()*Math.PI*2,speed:.35+Math.random()*.95,blue:Math.random()>.55,cross:i%8===0}));
   }
   resizeStars();addEventListener('resize',resizeStars,{passive:true});
   function drawStars(now){
     if(now-lastStarFrame<33){requestAnimationFrame(drawStars);return}lastStarFrame=now;
     sctx.clearRect(0,0,sw,sh);const scrollShift=(scrollY*.025)%sh;
     for(const s of stars){let y=(s.y-scrollShift+sh)%sh;const twinkle=.42+.58*(Math.sin(now*.001*s.speed+s.phase)*.5+.5);const alpha=s.a*twinkle;
-      sctx.beginPath();sctx.arc(s.x,y,s.r*(.82+twinkle*.25),0,Math.PI*2);sctx.fillStyle=s.blue?`rgba(41,151,255,${alpha})`:`rgba(81,101,126,${alpha*.72})`;sctx.fill();
+      sctx.save();sctx.shadowBlur=5+s.r*4;sctx.shadowColor=s.blue?'rgba(41,151,255,.55)':'rgba(95,184,255,.42)';sctx.beginPath();sctx.arc(s.x,y,s.r*(.82+twinkle*.25),0,Math.PI*2);sctx.fillStyle=s.blue?`rgba(41,151,255,${Math.min(.9,alpha)})`:`rgba(72,104,142,${Math.min(.78,alpha*.9)})`;sctx.fill();sctx.restore();
       if(s.cross&&twinkle>.48){const reach=5+twinkle*6;sctx.save();sctx.shadowBlur=10+twinkle*10;sctx.shadowColor=s.blue?'rgba(41,151,255,.72)':'rgba(255,255,255,.9)';sctx.strokeStyle=s.blue?`rgba(41,151,255,${Math.min(.9,alpha*.95)})`:`rgba(255,255,255,${Math.min(.9,alpha)})`;sctx.lineWidth=.75;sctx.beginPath();sctx.moveTo(s.x-reach,y);sctx.lineTo(s.x+reach,y);sctx.moveTo(s.x,y-reach);sctx.lineTo(s.x,y+reach);sctx.stroke();sctx.restore()}
     }
     if(!d.hidden)requestAnimationFrame(drawStars)
