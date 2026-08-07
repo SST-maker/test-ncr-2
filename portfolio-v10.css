@@ -263,3 +263,72 @@ html.page-hidden .meteor,html.page-hidden .star,html.page-hidden .hero-orbit,htm
   .meteor{animation-duration:16s!important}
   .stack-robot-dock__halo,.stack-robot-screen,.stack-robot-scan{animation-duration:12s!important}
 }
+
+
+/* ==========================================================================\n   V10.3 — BELLY VAULT\n   Les projets ne se collent plus sur l'écran : le ventre s'ouvre et les\n   réalisations plongent dans une mémoire interne où elles restent empilées.\n   ========================================================================== */
+.stack-robot-dock{--belly-open:0;--belly-charge:0}
+.stack-robot-screen,.stack-robot-scan{display:none!important}
+
+.stack-robot-belly{
+  position:absolute;z-index:6;left:27.0%;top:55.0%;width:46.1%;height:18.2%;
+  overflow:hidden;border-radius:9%;isolation:isolate;transform:translateZ(12px);
+  background:linear-gradient(180deg,#07111d,#0b1b2c 54%,#06101b);
+  box-shadow:inset 0 0 0 1px rgba(124,205,255,.24),inset 0 12px 30px rgba(0,0,0,.34),0 0 18px rgba(41,151,255,.10)
+}
+.stack-robot-belly::before{
+  content:"";position:absolute;z-index:0;inset:-25%;pointer-events:none;
+  background:radial-gradient(circle at 50% 82%,rgba(41,151,255,.28),transparent 46%),linear-gradient(180deg,rgba(255,255,255,.025),transparent 46%);
+  opacity:calc(.35 + var(--belly-open)*.6)
+}
+.stack-robot-belly__interior{position:absolute;z-index:2;inset:7% 6% 8%;overflow:hidden;border-radius:10%;perspective:420px;transform-style:preserve-3d}
+.stack-robot-belly__depth{position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(180deg,rgba(116,199,255,.055) 0 1px,transparent 1px 10px),radial-gradient(ellipse at 50% 100%,rgba(47,170,255,.25),transparent 60%);opacity:.72}
+.stack-robot-belly__depth::after{content:"";position:absolute;left:12%;right:12%;bottom:7%;height:1px;background:linear-gradient(90deg,transparent,rgba(129,211,255,.72),transparent);box-shadow:0 0 14px rgba(41,151,255,.34)}
+
+.stack-robot-belly__door{position:absolute;z-index:9;left:0;width:100%;height:51%;background:linear-gradient(180deg,#07121e,#0a1726);box-shadow:inset 0 0 0 1px rgba(112,191,244,.10);transition:none;will-change:transform}
+.stack-robot-belly__door::after{content:"";position:absolute;left:13%;right:13%;height:1px;background:linear-gradient(90deg,transparent,rgba(111,199,255,.38),transparent)}
+.stack-robot-belly__door--top{top:0;transform-origin:50% 0;transform:scaleY(calc(1 - var(--belly-open)))}
+.stack-robot-belly__door--top::after{bottom:5px}
+.stack-robot-belly__door--bottom{bottom:0;transform-origin:50% 100%;transform:scaleY(calc(1 - var(--belly-open)))}
+.stack-robot-belly__door--bottom::after{top:5px}
+.stack-robot-belly__rim{position:absolute;z-index:12;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(5,13,22,.75),inset 0 0 0 3px rgba(141,214,255,.12),0 0 12px rgba(41,151,255,.10)}
+.stack-robot-belly__scan{position:absolute;z-index:11;left:10%;right:10%;top:13%;height:1px;opacity:var(--belly-open);background:linear-gradient(90deg,transparent,rgba(154,222,255,.9),transparent);box-shadow:0 0 9px rgba(41,151,255,.55);animation:belly-scan 2.6s ease-in-out infinite;pointer-events:none}
+@keyframes belly-scan{0%,100%{transform:translateY(0);opacity:0}18%{opacity:calc(var(--belly-open)*.85)}72%{transform:translateY(54px);opacity:calc(var(--belly-open)*.45)}82%,100%{transform:translateY(54px);opacity:0}}
+
+.belly-memory{
+  --memory-p:0;--memory-index:0;position:absolute;z-index:3;left:8%;bottom:8%;width:84%;height:43%;
+  display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:10px;
+  background:linear-gradient(145deg,rgba(250,253,255,.96),rgba(218,239,255,.93));
+  border:1px solid rgba(255,255,255,.86);box-shadow:0 5px 15px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.75);
+  opacity:var(--memory-p);transform-origin:50% 100%;
+  transform:translate3d(0,calc((3 - var(--memory-index))*-5px + (1 - var(--memory-p))*-28px),calc(var(--memory-index)*7px)) rotateX(calc((1 - var(--memory-p))*-16deg)) rotateZ(calc((var(--memory-index) - 1.5)*.7deg)) scale(calc(.88 + var(--memory-index)*.018));
+  will-change:transform,opacity
+}
+.belly-memory img{flex:0 0 auto;width:24px;height:24px;object-fit:contain;border-radius:7px;background:#fff;padding:3px;box-shadow:0 3px 8px rgba(31,45,67,.10)}
+.belly-memory span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#24364a;font-size:.47rem;font-weight:900;letter-spacing:.015em}
+.belly-memory--sentinelle{background:linear-gradient(145deg,rgba(22,33,48,.97),rgba(37,57,80,.96));border-color:rgba(255,255,255,.13)}
+.belly-memory--sentinelle span{color:#fff}
+
+/* Le projet reste lisible pendant l'approche, devient une capsule puis plonge\n   derrière le cadre du ventre au lieu de finir collé sur sa surface. */
+.stack-card{--enter-p:0}
+.stack-card__copy,.stack-card__media,.stack-card>.azzera-stage{opacity:calc(1 - var(--dock-p)*.82)}
+.dock-mark{opacity:clamp(0,var(--dock-p),1);background:linear-gradient(145deg,rgba(246,251,255,.985),rgba(220,241,255,.985))}
+.stack-card.is-entering{border-radius:24px;filter:saturate(.92)}
+.stack-card.is-docked{pointer-events:none;box-shadow:none!important}
+.stack-card.is-docked .stack-card__edge{box-shadow:none!important}
+.stack-stage::after{right:2%;bottom:8%;width:38%;transform:rotate(-31deg);opacity:calc(.06 + var(--belly-open)*.22)}
+
+/* Le ventre prend vie quand la mémoire commence à se remplir. */
+.stack-robot-dock.is-vault-open .stack-robot-dock__halo{opacity:.95}
+.stack-robot-dock.is-vault-open>img{opacity:.98}
+.stack-robot-dock small{top:76.7%;color:rgba(41,151,255,.62)}
+
+@media(max-width:1100px){
+  .stack-robot-belly{left:26.9%;top:55%;width:46.2%;height:18.1%}
+  .belly-memory span{display:none}.belly-memory{justify-content:center;padding-inline:4px}.belly-memory img{width:22px;height:22px}
+}
+@media(max-width:900px){
+  .stack-robot-belly{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .stack-robot-belly__scan{animation-duration:8s!important}
+}
