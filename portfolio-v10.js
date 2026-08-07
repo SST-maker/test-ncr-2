@@ -63,13 +63,35 @@ if(heroObject&&heroRobot&&!coarse){
 
 /* Magnetic stack — cached metrics + inertial interpolation */
 const stack=d.querySelector('[data-project-stack]'),stage=d.querySelector('[data-stack-stage]'),cards=[...d.querySelectorAll('[data-stack-card]')],rail=[...d.querySelectorAll('[data-stack-jump]')],stackBar=d.querySelector('[data-stack-progress]'),stackLabel=d.querySelector('[data-stack-label]'),projectDisplay=d.querySelector('[data-project-display]'),bellyRobot=d.querySelector('[data-belly-robot]'),belly=d.querySelector('[data-robot-belly]'),bellyMemories=[...d.querySelectorAll('[data-belly-memory]')];
+if(projectDisplay&&bellyRobot&&projectDisplay.parentElement!==bellyRobot){bellyRobot.appendChild(projectDisplay)}
+if(projectDisplay&&cards.length){cards.forEach(card=>projectDisplay.appendChild(card))}
+const screenMemoryDock=d.querySelector('[data-screen-memory-dock]');
+if(screenMemoryDock&&bellyMemories.length){bellyMemories.forEach(memory=>screenMemoryDock.appendChild(memory))}
 const labels=['01 / NCR Suite','02 / Sentinelle Pro','03 / Application SST','04 / Sites Azzera'];
 let stackTop=0,stackRange=1,targetP=0,displayP=0,stackRAF=0,lastTime=performance.now(),stackVisible=true,lastActive=-1;
+let dockX=0,dockY=0,dockS=.32;
 function measureStack(){
   if(!stack)return;
   stackTop=scrollY+stack.getBoundingClientRect().top;
   stackRange=Math.max(1,stack.offsetHeight-innerHeight);
   targetP=clamp((scrollY-stackTop)/stackRange);
+  const stageRect=stage?.getBoundingClientRect();
+  const cardRect=cards[0]?.getBoundingClientRect();
+  const bellyRect=belly?.getBoundingClientRect();
+  if(stageRect&&cardRect&&bellyRect){
+    const cardLeft=cardRect.left-stageRect.left;
+    const cardTop=cardRect.top-stageRect.top;
+    const targetLeft=(bellyRect.left-stageRect.left)+bellyRect.width*.12;
+    const targetTop=(bellyRect.top-stageRect.top)+bellyRect.height*.23;
+    dockX=targetLeft-cardLeft;
+    dockY=targetTop-cardTop;
+    const targetWidth=bellyRect.width*.74;
+    dockS=clamp(targetWidth/Math.max(1,cardRect.width),.22,.52);
+  }else if(stageRect){
+    dockX=stageRect.width*.13;
+    dockY=stageRect.height*.16;
+    dockS=.34;
+  }
   if(innerWidth<=900)displayP=targetP
 }
 function setStackTarget(){
@@ -90,11 +112,10 @@ function renderStack(p){
   }
 
   const sw=stage?.clientWidth||820,sh=stage?.clientHeight||650;
-  /* V10.4 : la position active est exactement le grand écran déployé.
-     La carte ne flotte plus hors du robot. Elle naît, vit et reste dans cet écran. */
+  /* V10.5 : le projet vit dans l'écran du robot.
+     Le grand affichage reste ancré dans la dalle, puis se compacte vers le ventre. */
   const activeX=0,activeY=0,activeS=1;
-  /* Quand le projet suivant prend la main, l'ancien repart vers le ventre physique. */
-  const dockX=sw*.365,dockY=sh*.405,dockS=.176;
+  const dh=projectDisplay?.clientHeight||220,dockMoveX=0,dockMoveY=dh*.36,dockScale=.36;
 
   /* L'écran étendu est vivant tant qu'au moins une réalisation est affichée. */
   const phase=raw-Math.floor(raw);
@@ -131,13 +152,13 @@ function renderStack(p){
       dockP=silk(clamp(local-1));
       enterP=silk(clamp((dockP-.62)/.38));
       const layer=Math.max(0,current-i-1);
-      x=lerp(activeX,dockX-layer*.8,dockP);
-      y=lerp(activeY,dockY+enterP*sh*.018-layer*.8,dockP);
+      x=lerp(activeX,dockMoveX-layer*.8,dockP);
+      y=lerp(activeY,dockMoveY+enterP*sh*.018-layer*.8,dockP);
       z=lerp(18,56-layer*2,dockP)-enterP*150;
       rx=lerp(0,-.6-layer*.05,dockP);
       ry=lerp(0,.8-layer*.07,dockP);
       rz=lerp(0,(i%2?1:-1)*(.5+layer*.08),dockP);
-      s=lerp(activeS,dockS-layer*.002,dockP)*(1-enterP*.18);
+      s=lerp(activeS,dockScale-layer*.003,dockP)*(1-enterP*.12);
       const vanish=silk(clamp((dockP-.76)/.24));
       o=lerp(1,.01,vanish);
       sheen=(1-dockP)*(i===current?.05:0);

@@ -413,3 +413,164 @@ html.page-hidden .meteor,html.page-hidden .star,html.page-hidden .hero-orbit,htm
   .stack-card{position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important}
 }
 @media(prefers-reduced-motion:reduce){.stack-project-display__status i{animation-duration:7s!important}}
+
+/* ==========================================================================
+   V10.5 — ACTIVE PROJECT INSIDE THE ROBOT SCREEN
+   Le grand projet est réellement affiché dans l'écran du robot :
+   l'écran se déploie depuis le ventre, grandit, puis le projet se compacte
+   et replonge vers la mémoire interne.
+   ========================================================================== */
+.stack-stage{--screen-live:0;--belly-open:0;isolation:isolate}
+.stack-robot-dock{
+  z-index:8;
+  right:-6%;
+  bottom:-10%;
+  width:min(88%,640px);
+  pointer-events:auto;
+  transform:translate3d(0,0,-60px);
+}
+.stack-robot-dock>img,.stack-robot-belly,.stack-robot-dock__halo,.stack-robot-dock small{pointer-events:none}
+.stack-project-display{
+  position:absolute;
+  z-index:9;
+  left:27.05%;
+  top:55.05%;
+  width:46.1%;
+  height:18.2%;
+  border-radius:9%;
+  overflow:hidden;
+  pointer-events:auto;
+  isolation:isolate;
+  background:linear-gradient(180deg,rgba(7,17,29,.985),rgba(10,23,38,.985));
+  border:1px solid rgba(126,207,255,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),0 0 18px rgba(41,151,255,.14),0 16px 48px rgba(0,0,0,.16);
+  transform-origin:50% 50%;
+  transform:translateZ(28px) scale(calc(1 + var(--screen-live)*1.85));
+  opacity:1;
+}
+.stack-project-display::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 70% 82%,rgba(41,151,255,.15),transparent 34%),
+    linear-gradient(125deg,rgba(255,255,255,.045),transparent 26% 72%,rgba(85,185,255,.04));
+}
+.stack-project-display::after{
+  content:"";
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(202,235,255,.9),transparent);
+  opacity:calc(.18 + var(--screen-live)*.58);
+  box-shadow:0 0 12px rgba(41,151,255,.22);
+}
+.stack-project-display__glass{z-index:8}
+.stack-project-display__edge{z-index:12;border-radius:inherit;box-shadow:inset 0 0 0 2px rgba(4,12,20,.8),inset 0 0 0 3px rgba(126,207,255,.08)}
+.stack-project-display__connector{display:none}
+.stack-project-display__status{
+  z-index:13;
+  left:14px;
+  top:10px;
+  gap:6px;
+  font-size:.38rem;
+  opacity:calc(.55 + var(--screen-live)*.45);
+}
+.stack-project-display__status i{width:5px;height:5px}
+
+.stack-project-display .stack-card{
+  inset:7% 6% 8% !important;
+  left:auto !important;
+  top:auto !important;
+  width:auto !important;
+  height:auto !important;
+  border-radius:18px;
+  box-shadow:0 14px 36px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.08);
+  border-color:rgba(255,255,255,.72);
+}
+.stack-project-display .stack-card.is-active{box-shadow:0 18px 42px rgba(0,0,0,.22),0 4px 14px rgba(41,151,255,.09)}
+.stack-project-display .stack-card__copy{padding:clamp(14px,1.5vw,22px)}
+.stack-project-display .project-brand img{width:34px;height:34px;border-radius:10px}
+.stack-project-display .project-brand small{font-size:.48rem}
+.stack-project-display .stack-card h3{margin-top:.55rem;font-size:clamp(1.18rem,1.9vw,2.2rem);line-height:.95}
+.stack-project-display .stack-card__copy>p{margin-top:.55rem;font-size:.62rem;line-height:1.42}
+.stack-project-display .chips{margin-top:.55rem;gap:.3rem}
+.stack-project-display .chips span{padding:.28rem .42rem;font-size:.48rem}
+.stack-project-display .case-link{margin-top:.65rem;font-size:.58rem}
+.stack-project-display .browser-top{height:22px;padding-inline:8px}
+.stack-project-display .browser-top span{font-size:.46rem}
+.stack-project-display .browser-frame{top:8%;left:5%;width:90%;border-radius:13px}
+.stack-project-display .mini-frame{right:6%;bottom:6%;width:37%;border-radius:12px}
+.stack-project-display .sentinelle-browser{left:4%;top:8%;width:88%;border-radius:13px}
+.stack-project-display .sentinelle-phone{right:6%;bottom:7%;width:24%;border-width:3px;border-radius:16px}
+.stack-project-display .radar-lines{right:10%;top:13%;width:31%}
+.stack-project-display .sst-phone{border-width:3px;border-radius:18px;width:29%}
+.stack-project-display .azzera-stage{padding:4% 3% 5%}
+.stack-project-display .azzera-carousel{gap:10px;padding:1% 7% 4%}
+.stack-project-display .azzera-carousel figure{border-radius:14px}
+.stack-project-display .azzera-carousel figcaption{padding:.42rem .55rem}
+.stack-project-display .azzera-carousel strong{font-size:.68rem}
+.stack-project-display .azzera-carousel span{font-size:.52rem}
+.stack-project-display .azzera-controls{bottom:4%}
+.stack-project-display .azzera-controls button{width:28px;height:28px}
+.stack-project-display .dock-mark{opacity:clamp(0,calc((var(--dock-p) - .62) * 2.8),1)}
+.stack-project-display .stack-card__copy,
+.stack-project-display .stack-card__media,
+.stack-project-display .stack-card>.azzera-stage{opacity:calc(1 - clamp(0,calc((var(--dock-p) - .60) * 2.2),.94))}
+
+@media(max-width:1100px){
+  .stack-robot-dock{right:-8%;width:min(92%,560px)}
+  .stack-project-display{transform:translateZ(22px) scale(calc(1 + var(--screen-live)*1.58))}
+}
+@media(max-width:900px){
+  .stack-robot-dock{pointer-events:none}
+}
+
+/* Memory shelf visible inside the deployed robot screen. */
+.screen-memory-dock{
+  position:absolute;
+  z-index:11;
+  right:5.5%;
+  bottom:5.5%;
+  width:31%;
+  height:25%;
+  pointer-events:none;
+  transform-style:preserve-3d;
+  perspective:520px;
+}
+.screen-memory-dock::before{
+  content:"MÉMOIRE NCR";
+  position:absolute;
+  right:2px;
+  bottom:100%;
+  margin-bottom:5px;
+  color:rgba(194,227,248,.42);
+  font-size:.34rem;
+  font-weight:900;
+  letter-spacing:.15em;
+}
+.screen-memory-dock .belly-memory{
+  left:4%;
+  bottom:3%;
+  width:92%;
+  height:44%;
+  padding:4px 7px;
+  border-radius:8px;
+  transform:
+    translate3d(0,calc((3 - var(--memory-index))*-6px + (1 - var(--memory-p))*18px),calc(var(--memory-index)*10px))
+    rotateX(calc((1 - var(--memory-p))*8deg))
+    rotateZ(calc((var(--memory-index) - 1.5)*.6deg))
+    scale(calc(.84 + var(--memory-index)*.024));
+  opacity:var(--memory-p);
+  box-shadow:0 5px 14px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.72);
+}
+.screen-memory-dock .belly-memory img{width:20px;height:20px;border-radius:6px}
+.screen-memory-dock .belly-memory span{font-size:.39rem}
+
+/* The physical belly stays visually behind the deployed screen, avoiding a double-screen effect. */
+.stack-robot-belly{opacity:calc(1 - var(--screen-live)*.82)}
+.stack-robot-dock>img{z-index:2}
+.stack-project-display{z-index:10}
