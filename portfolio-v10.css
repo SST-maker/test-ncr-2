@@ -332,3 +332,84 @@ html.page-hidden .meteor,html.page-hidden .star,html.page-hidden .hero-orbit,htm
 @media(prefers-reduced-motion:reduce){
   .stack-robot-belly__scan{animation-duration:8s!important}
 }
+
+
+/* ==========================================================================\n   V10.4 — SCREEN STAGE\n   Le projet actif n'existe plus comme grande carte extérieure au robot.\n   L'écran du ventre se déploie en grand et devient la scène du projet actif.\n   Au changement, la carte se rétracte vers le ventre puis rejoint la mémoire.\n   ========================================================================== */
+.stack-stage{--screen-live:0;--belly-open:0;isolation:isolate}
+
+/* L'écran physique du robot reste le point d'ancrage. Son extension reprend\n   exactement le langage sombre/verre de la dalle du ventre. */
+.stack-project-display{
+  position:absolute;z-index:6;left:1.5%;top:8%;width:88%;height:66%;
+  border-radius:34px;pointer-events:none;overflow:hidden;isolation:isolate;
+  background:linear-gradient(145deg,rgba(5,13,23,.985),rgba(12,29,48,.97));
+  border:1px solid rgba(126,207,255,.22);
+  box-shadow:0 34px 90px rgba(31,45,67,.13),inset 0 0 0 1px rgba(255,255,255,.035),inset 0 -28px 70px rgba(41,151,255,.05);
+  transform-origin:93% 91%;
+  transform:perspective(1200px) rotateX(calc((1 - var(--screen-live)) * 2deg)) rotateY(calc((1 - var(--screen-live)) * -2deg)) scale(calc(.982 + var(--screen-live)*.018));
+  opacity:calc(.76 + var(--screen-live)*.24);
+  transition:box-shadow .5s var(--ease-silk),border-color .5s var(--ease-silk)
+}
+.stack-project-display::before{
+  content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 78% 78%,rgba(41,151,255,.13),transparent 37%),linear-gradient(120deg,rgba(255,255,255,.035),transparent 22% 72%,rgba(109,199,255,.045));
+}
+.stack-project-display::after{
+  content:"";position:absolute;z-index:8;left:6%;right:6%;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(180,228,255,.82),transparent);
+  opacity:calc(.2 + var(--screen-live)*.55);box-shadow:0 0 14px rgba(41,151,255,.26)
+}
+.stack-project-display__glass{position:absolute;z-index:7;inset:0;background:linear-gradient(112deg,rgba(255,255,255,.028),transparent 24% 72%,rgba(109,201,255,.026));pointer-events:none}
+.stack-project-display__edge{position:absolute;z-index:9;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2px rgba(3,10,18,.72),inset 0 0 0 3px rgba(126,207,255,.085);pointer-events:none}
+.stack-project-display__status{position:absolute;z-index:10;left:26px;top:18px;display:flex;align-items:center;gap:8px;color:rgba(198,230,250,.64);font-size:.48rem;font-weight:900;letter-spacing:.18em}
+.stack-project-display__status i{width:6px;height:6px;border-radius:50%;background:#55bcff;box-shadow:0 0 10px rgba(41,151,255,.6);animation:screen-status 2.2s ease-in-out infinite}
+@keyframes screen-status{0%,100%{opacity:.38;transform:scale(.82)}50%{opacity:1;transform:scale(1.08)}}
+
+/* Liaison visuelle : l'écran déployé est bien celui du ventre, pas un panneau\n   indépendant posé dans la scène. */
+.stack-project-display__connector{
+  position:absolute;z-index:1;right:-8%;bottom:-18%;width:25%;height:42%;
+  border-right:1px solid rgba(82,181,246,.24);border-bottom:1px solid rgba(82,181,246,.18);
+  border-radius:0 0 44px 0;transform:skewX(-15deg);opacity:.7
+}
+
+/* La grande carte vit DESORMAIS à l'intérieur de l'écran déployé. */
+.stack-card{
+  inset:auto!important;left:4.4%;top:13.4%;width:82.2%;height:55.6%;
+  border-radius:25px;transform-origin:50% 50%;
+  box-shadow:0 18px 54px rgba(0,0,0,.19),0 4px 14px rgba(0,0,0,.09);
+  border-color:rgba(255,255,255,.7)
+}
+.stack-card.is-active{box-shadow:0 22px 64px rgba(0,0,0,.22),0 4px 16px rgba(41,151,255,.08)}
+.stack-card__copy{padding:clamp(18px,2.1vw,32px)}
+.project-brand img{width:40px;height:40px;border-radius:12px}
+.project-brand small{font-size:.55rem}
+.stack-card h3{margin-top:.8rem;font-size:clamp(1.8rem,2.7vw,3.25rem)}
+.stack-card__copy>p{margin-top:.72rem;font-size:.72rem;line-height:1.5}
+.chips{margin-top:.75rem}.chips span{padding:.38rem .52rem;font-size:.52rem}.case-link{margin-top:.85rem;font-size:.66rem}
+.browser-frame{top:10%;border-radius:15px}.mini-frame{bottom:7%;border-radius:13px}
+.sentinelle-browser{top:10%;border-radius:15px}.sentinelle-phone{border-width:4px;border-radius:18px}
+.sst-phone{border-width:4px;border-radius:20px}
+.azzera-stage{padding:5.5% 4% 5%}.azzera-carousel{gap:12px;padding:1% 8% 3%}.azzera-carousel figure{border-radius:16px}.azzera-carousel figcaption{padding:.5rem .65rem}
+
+/* Le robot reste entièrement visible et l'écran étendu semble sortir de son ventre. */
+.stack-robot-dock{z-index:5;right:-2%;bottom:-10.5%;width:min(43%,420px);transform:translate3d(0,0,-100px)}
+.stack-robot-belly{z-index:8;box-shadow:inset 0 0 0 1px rgba(124,205,255,.28),inset 0 10px 26px rgba(0,0,0,.36),0 0 22px rgba(41,151,255,.14)}
+.stack-robot-dock>img{opacity:.96}
+
+/* Pendant qu'un projet est actif, le ventre reste fermé comme écran-source.\n   Il ne s'ouvre que pendant la rétraction vers la mémoire. */
+.stack-robot-belly__door--top{transform:scaleY(calc(1 - var(--belly-open)))}
+.stack-robot-belly__door--bottom{transform:scaleY(calc(1 - var(--belly-open)))}
+
+/* Le dock-mark n'apparaît qu'au moment final, jamais pendant le grand affichage. */
+.dock-mark{opacity:clamp(0,calc((var(--dock-p) - .62) * 2.7),1)}
+.stack-card__copy,.stack-card__media,.stack-card>.azzera-stage{opacity:calc(1 - clamp(0,calc((var(--dock-p) - .58) * 2.2),.92))}
+
+@media(max-width:1100px){
+  .stack-project-display{left:0;top:11%;width:91%;height:61%}
+  .stack-card{left:3.8%;top:16%;width:85%;height:50.5%}
+  .stack-card__copy>p{font-size:.66rem}.chips{display:none}.case-link{margin-top:.6rem}
+}
+@media(max-width:900px){
+  .stack-project-display{display:none}
+  .stack-card{position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important}
+}
+@media(prefers-reduced-motion:reduce){.stack-project-display__status i{animation-duration:7s!important}}
